@@ -1,6 +1,6 @@
 # IntElegance
-This application is the result of my during my end of studies project
-it's a project management application that i developed during my internship in Sofiatech
+- This application is the result of my during my end of studies project
+- It's a project management application that i developed during my internship in Sofiatech
 
 ## Technologies used 
 
@@ -46,7 +46,7 @@ it's a project management application that i developed during my internship in S
   }
 - then navigate to the root folder where you can find the docker-compose.yml file
 - and run docker compose up in the terminal.
-- after the docker compose up finishes creatings containers you may need to bring them down (docker compose down) and the re-execute docker-compose up so the migrations container can do its work
+- after the docker compose up finishes creatings containers you may need to bring them down (docker compose down) and then re-execute docker-compose up so the migrations container can do its work
 
 
 
