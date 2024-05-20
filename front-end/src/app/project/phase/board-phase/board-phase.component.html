@@ -1,0 +1,140 @@
+<mat-card>
+  <mat-card-content>
+    <div class="d-flex no-block align-items-center b-b m-b-30 p-b-15">
+      <button class="add-button" mat-raised-button color="primary" [routerLink]="['/project/task/add', phaseId]">
+        <mat-icon>add</mat-icon> {{'Créer ticket' | translate}}
+      </button>
+      <div class="ml-auto">
+        <div>
+          <a mat-icon-button>
+            <mat-icon matTooltip="{{'Revenir en arrière' | translate}}" color="accent"
+              [routerLink]="['/project/details', projectId]">undo</mat-icon>
+          </a>
+        </div>
+        <div fxFlex.gt-md="90">
+          <h5 class="font-medium m-b-0 m-t-0" class="project-name">{{ projectName }}</h5>
+          <span class="bg-dark" [ngClass]="getStatusClass(projectStatus)">
+            {{ phaseTitle }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row wrap" class="taskboard page-height" cdkDropListGroup>
+      <!-- Column-->
+      <div fxFlex.gt-md="20" fxFlex-md="50" fxFlex.gt-xs="100" fxFlex="100">
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list todos">
+            <div class="taskboard-header text-uppercase">
+              <strong>{{'newStatus' | translate}}</strong>
+            </div>
+            <div class="taskboard-cards" [cdkDropListData]="newList" cdkDropList (cdkDropListDropped)="drop($event)">
+              <div class="taskboard-task" cdkDrag *ngFor="let task of newList">
+                <div class="taskboard-task-title ticket-badge" matBadge="{{task.children}}" matBadgeOverlap="false">{{
+                  task.name }}</div>
+                <div>
+                  <a mat-icon-button [routerLink]="['/project/task/edit', task.id]"><mat-icon>edit</mat-icon></a>
+                  <button mat-icon-button color="warn" *ngIf="hasPermission(deleteTasksPermission)"
+                    (click)="deleteTask(task)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column-->
+      <div fxFlex.gt-md="20" fxFlex-md="50" fxFlex.gt-xs="100" fxFlex="100">
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list inprogress">
+            <div class="taskboard-header text-uppercase">
+              <strong>{{'inProgressStatus' | translate}}</strong>
+            </div>
+            <div class="taskboard-cards" [cdkDropListData]="inprogresList" cdkDropList
+              (cdkDropListDropped)="drop($event)">
+              <div class="taskboard-task" cdkDrag *ngFor="let task of inprogresList">
+                <div class="taskboard-task-title ticket-badge" matBadge="{{task.children}}" matBadgeOverlap="false">{{
+                  task.name }}</div>
+                <div>
+                  <a mat-icon-button [routerLink]="['/project/task/edit', task.id]"><mat-icon>edit</mat-icon></a>
+                  <button mat-icon-button matTooltip="Annuler ticket" color="warn" (click)="cancelTask(task)"
+                    *ngIf="hasPermission(deleteTasksPermission)"><mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column-->
+      <div fxFlex.gt-md="20" fxFlex-md="50" fxFlex.gt-xs="100" fxFlex="100">
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list resolved">
+            <div class="taskboard-header text-uppercase">
+              <strong>{{'resolvedStatus' | translate}}</strong>
+            </div>
+            <div class="taskboard-cards" [cdkDropListData]="resolvedList" cdkDropList
+              (cdkDropListDropped)="drop($event)">
+              <div class="taskboard-task" cdkDrag *ngFor="let task of resolvedList">
+                <div class="taskboard-task-title ticket-badge" matBadge="{{task.children}}" matBadgeOverlap="false">{{
+                  task.name }}</div>
+                <div>
+                  <a mat-icon-button [routerLink]="['/project/task/edit', task.id]"><mat-icon>edit</mat-icon></a>
+                  <button mat-icon-button matTooltip="Annuler ticket" color="warn" (click)="cancelTask(task)"
+                    *ngIf="hasPermission(deleteTasksPermission)"><mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column-->
+      <div fxFlex.gt-md="20" fxFlex-md="50" fxFlex.gt-xs="100" fxFlex="100">
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list integrated">
+            <div class="taskboard-header text-uppercase">
+              <strong>{{'integratedStatus' | translate}}</strong>
+            </div>
+            <div class="taskboard-cards" [cdkDropListData]="integratedList" cdkDropList
+              (cdkDropListDropped)="drop($event)">
+              <div class="taskboard-task" cdkDrag *ngFor="let task of integratedList"
+                [cdkDragDisabled]="task.isDisabled">
+                <div class="taskboard-task-title ticket-badge" matBadge="{{task.children}}" matBadgeOverlap="false">{{
+                  task.name }}</div>
+                <div>
+                  <a mat-icon-button [routerLink]="['/project/task/edit', task.id]"><mat-icon>edit</mat-icon></a>
+                  <button mat-icon-button matTooltip="Annuler ticket" color="warn" (click)="cancelTask(task)"
+                    *ngIf="hasPermission(deleteTasksPermission)"><mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column-->
+      <div fxFlex.gt-md="20" fxFlex-md="50" fxFlex.gt-xs="100" fxFlex="100">
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list completed">
+            <div class="taskboard-header text-uppercase">
+              <strong>{{'completedStatus' | translate}}</strong>
+            </div>
+            <div class="taskboard-cards" [cdkDropListData]="doneList" cdkDropList (cdkDropListDropped)="drop($event)">
+              <div class="taskboard-task" cdkDrag *ngFor="let task of doneList">
+                <div class="taskboard-task-title ticket-badge" matBadge="{{task.children}}" matBadgeOverlap="false">{{
+                  task.name }}</div>
+                <div>
+                  <a mat-icon-button [routerLink]="['/project/task/edit', task.id]"><mat-icon>edit</mat-icon></a>
+                  <button mat-icon-button matTooltip="Annuler ticket" color="warn" (click)="cancelTask(task)"
+                    *ngIf="hasPermission(deleteTasksPermission)"><mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

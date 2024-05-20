@@ -1,0 +1,56 @@
+<div fxLayout="row wrap">
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" >
+        <mat-card class="bg-success" >
+            <mat-card-content>
+                <!-- column -->
+                <div class="cards" class="d-flex p-t-0 p-b-0 no-block align-items-center" >
+                    <!-- column -->
+                    <div class="stats">
+                        <h3 class="text-white m-0">{{'card1' | translate}}</h3>
+                        <h1 class="text-white m-0">{{assignedTo}}</h1>
+                    </div>
+                     <div class="stats-icon text-right ml-auto">
+                        <i class="fa fa-users display-5 op-3 text-white"></i>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+<div fxLayout="row wrap" class="space">
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card class="bg-purple">
+            <mat-card-content>
+                <!-- column -->
+                <div class="d-flex p-t-0 p-b-0 no-block align-items-center">
+                    <div class="stats">
+                        <h3 class="text-white m-0">{{'card2' | translate}}</h3>
+                        <h1 class="text-white m-0">{{realisation}} %</h1>
+                    </div>
+                    <div class="stats-icon text-right ml-auto">
+                        <i class="fa fa-line-chart display-5 op-3 text-white"></i>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<div fxLayout="row wrap" class="space">
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card class="bg-info">
+            <mat-card-content>
+                <!-- column -->
+                <div class="d-flex p-t-0 p-b-0 no-block align-items-center">
+                    <div class="stats">
+                        <h3 class="text-white m-0">{{'card3' | translate}}</h3>
+                        <h1 class="text-white m-0">{{passedTime}} H / {{estimatedTime}} H</h1>
+                    </div>
+                    <div class="stats-icon text-right ml-auto">
+                        <i class="fa fa-clock-o display-5 op-3 text-white"></i>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

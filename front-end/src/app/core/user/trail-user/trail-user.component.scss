@@ -1,0 +1,22 @@
+@import 'src/assets/styles/variable.scss';
+
+.success{
+    background: $light-success
+}
+
+.danger{
+    background: $light-danger
+}
+
+.trail-text{
+    font-size: 12px;
+  }
+
+.mat-card-content{
+    margin-bottom: -20px;
+  }
+  
+.no-data{
+  margin-left: 30px;
+}
+

@@ -1,0 +1,28 @@
+<div mat-dialog-title class="custom-dialog-title custom-dark-blue-50"
+     style="display: flex;  justify-content: space-between;flex-direction: row
+">
+    <span style="font-size:20px">
+        {{'confirm'|translate}}
+    </span>
+    <button mat-mini-fab color="primary" (click)="dialogRef.close(false)"><i class="material-icons">close</i></button>
+</div>
+<mat-dialog-content class="custom-dialog-content confirm-dialog shadow-none">
+    <div class="container"  fxLayout="row" fxLayoutAlign="center center" class="pa-1 pa-rl-2 text-align-center"  >
+        {{confirmMessage|translate}}
+    </div>
+    <form #commentForm="ngForm" class="multi-boxes-container" *ngIf="comment">
+        <div class="container" fxLayout="row" fxLayoutAlign="center center" class="pa-1 pt-0 pa-rl-2 text-align-center"
+            >
+            <label class="pr-xs font-weight-bold box-content-label" fxFlex="45">
+                {{'comment'|translate}}&nbsp;:
+            </label>
+            <mat-form-field fxFlex="60" floatPlaceholder="never" shouldPlaceholderFloat="false">
+            <textarea matInput rows="15" cols="25" name="comment" ngModel type="text" placeholder="{{'enter'|translate}}.." #comment="ngModel"></textarea>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center" style="margin-top: 10%">
+    <button mat-button class="header-button"  (click)="dialogRef.close(true)" title="{{'yes'|translate}}">{{'yes'| translate}}</button>
+    <button mat-button style="background-color: lightgray; color: #fff;margin: 2px;" (click)="dialogRef.close(false)" title="{{'no'|translate}}">{{'no'| translate}}</button>
+</mat-dialog-actions>

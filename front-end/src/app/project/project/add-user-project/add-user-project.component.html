@@ -1,0 +1,37 @@
+<a mat-icon-button class="close-button" [mat-dialog-close]="true" matTooltip="{{ 'matTooltipClose' | translate }}">
+  <mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title>{{'Ajouter des personnes' | translate}}</h2>
+<form>
+  <mat-form-field appearance="fill">
+    <mat-label>{{'saisir un nom' | translate}}</mat-label>
+    <input matInput aria-label="State" [matAutocomplete]="auto" [formControl]="users">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onUserOptionSelected($event)">
+      <mat-option *ngFor="let user of filteredUsers | async" [value]="getUserFullName(user)">
+        <div fxFlex="100" fxFlex.gt-md="12">
+          <img alt="user" class="mat-card-avatar" [src]="user.image">
+        </div>
+        <div fxFlex="100" fxFlex.gt-md="88" class="user-details">
+          <span>{{user.firstName}} {{user.lastName}}</span> |
+          <small>{{user.position}}</small>
+        </div>
+      </mat-option>
+      <mat-option *ngIf="users.value && !(filteredUsers | async)?.length" [disabled]="true">
+        {{noDataFound}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-chip-list #chipList aria-label="User Selection">
+      <mat-chip *ngIf="selectedUser" [removable]="true" (removed)="removeUser()">
+        <img matChipAvatar [src]="selectedUser.image" alt="user">
+        {{ selectedUser.firstName }} {{ selectedUser.lastName }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </mat-form-field>
+  <div align="end" class="buttons" fxLayoutGap="10px">
+    <button mat-button (click)="submit()" mat-flat-button color="warn">
+      {{'Ajouter' | translate}}
+    </button>
+    <button class="canceled" mat-button (click)="closeDialog()">{{'Annuler' | translate}}</button>
+  </div>
+</form>

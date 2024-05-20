@@ -1,0 +1,79 @@
+<div fxLayout="row wrap">
+  <div
+    *ngIf="roleUser === role; else elseBlock"
+    fxFlex.gt-lg="100"
+    fxFlex.gt-md="100"
+    fxFlex.gt-xs="100"
+    fxFlex="100"
+  >
+    <app-cards-general-statistics></app-cards-general-statistics>
+  </div>
+  <ng-template #elseBlock>
+    <div fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+      <app-cards-user-statistics></app-cards-user-statistics>
+    </div>
+  </ng-template>
+
+  <div
+  class="space"
+    *ngIf="roleUser === role"
+    fxFlex.gt-md="55"
+    fxFlex.gt-xs="100"
+    fxFlex="100"
+  >
+    <app-list-users></app-list-users>
+  </div>
+  <div
+  class="space"
+
+    *ngIf="roleUser === role"
+    fxFlex.gt-md="45"
+    fxFlex.gt-xs="100"
+    fxFlex="100"
+  >
+    <app-department-list-users></app-department-list-users>
+  </div>
+</div>
+<mat-card></mat-card>
+<div fxLayout="row" class="card-project">
+  <div fxFlex.gt-md="35" fxFlex.gt-xs="100" fxFlex="100">
+    <app-status-list-projects></app-status-list-projects>
+  </div>
+  <div fxFlex.gt-md="65" fxFlex.gt-xs="100" fxFlex="100">
+    <app-tracker-list-projects></app-tracker-list-projects>
+  </div>
+</div>
+<mat-card>
+<div fxLayout="row">
+  <div class="ml-auto">
+    <mat-form-field>
+      <mat-select
+        placeholder="{{ label }}"
+        [formControl]="selectedValue"
+        #choosedValue
+        (selectionChange)="changeProject(choosedValue.value)"
+      >
+        <mat-option *ngIf="projectList.length === 0" disabled>{{
+          noResult
+        }}</mat-option>
+        <mat-option *ngFor="let project of projectList" [value]="project.id">
+          {{ project.name }} 
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div fxLayout="row">
+  <div fxFlex.gt-md="30" fxFlex.gt-xs="100" fxFlex="100">
+    <app-cards-project [id]="projectId"></app-cards-project>
+  </div>
+  <div fxFlex.gt-md="70" fxFlex.gt-xs="100" fxFlex="100">
+    <app-progress-tasks-project [id]="projectId"></app-progress-tasks-project>
+  </div>
+</div>
+</mat-card>
+<div fxLayout="row">
+  <div fxFlex.gt-md="60" fxFlex.gt-xs="100" fxFlex="100">
+    <app-progress-users-project [id]="projectId"></app-progress-users-project>
+  </div>
+</div>

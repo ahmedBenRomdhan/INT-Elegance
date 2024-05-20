@@ -1,0 +1,42 @@
+<div class="login-register" style="background-image:url(assets/images/background/login1.jpg);">
+  <div class="login-register-box">
+      <mat-card>
+          <mat-card-content>
+              <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                  <div class="text-center">
+                      <img alt="homepage" src="assets/images/LOGO2NW.png" width="50" height="50">
+                      <h4 class="m-t-0">Connectez-vous à INT-Elegance</h4>
+                  </div>
+
+                  <div fxLayout="row wrap" >
+                      <!-- col full-->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                          <mat-form-field>
+                              <input matInput placeholder="Adresse e-mail" [formControl]="form.controls['email']">
+                          </mat-form-field>
+                          <small *ngIf="form.controls['email'].hasError('required') && form.controls['email'].touched" class="text-danger support-text">L'adresse e-mail est obligatoire.</small>
+                          <small *ngIf="form.controls['email'].errors?.email && form.controls['email'].touched" class="text-danger support-text">Vous devez fournir une adresse e-mail valide.</small>
+                      </div>
+                      <!-- col full-->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                          <mat-form-field>
+                              <input matInput type="password" placeholder="Mot de passe" [formControl]="form.controls['password']">
+                          </mat-form-field>
+                          <small *ngIf="form.controls['password'].hasError('required') && form.controls['password'].touched" class="text-danger support-text">Le mot de passe est obligatoire.</small>
+
+                      </div>
+
+
+               
+                      <!-- col full-->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                          <button mat-raised-button color="primary" class="btn-block btn-lg m-t-20 m-b-20" type="submit" [disabled]="!form.valid">Se connecter</button>
+                      </div>
+                      <!-- col full-->
+
+                  </div>
+              </form>
+          </mat-card-content>
+      </mat-card>
+  </div>
+</div>

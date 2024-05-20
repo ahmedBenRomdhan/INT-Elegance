@@ -1,0 +1,128 @@
+.course-header {
+
+  &.new {
+    background-color: #18b8cd;
+  }
+
+  &.in-progress {
+    background-color: #f5a212;
+  }
+
+  &.completed {
+    background-color: #009688;
+  }
+
+  color: #fff;
+
+  .mat-card-title {
+    font-size: 15px !important;
+    display: flex;
+    align-items: center;
+
+    .project-type {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      color: rgb(233, 224, 224);
+      font-size: 13px;
+      margin-right: -15px;
+    }
+
+    .project-name{
+      text-transform: capitalize;
+      display: inline-block;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+      margin-left: -15px;
+    }
+  }
+}
+
+.mat-card-actions {
+  border-top: 1px solid rgba(120, 130, 140, 0.13);
+  padding: 8px 0 !important;
+}
+
+.mat-form-field {
+  margin-top: 10px;
+}
+
+.mat-expansion-panel{
+  margin-left: 18px;
+  margin-right: 18px;
+}
+
+.project-buttons{
+  margin-top: 10px;
+  margin-left: 18px;
+}
+
+.ml-auto{
+  margin-right: 20px;
+}
+
+.search-button{
+  margin-top: 9px;
+  font-size: 8px
+}
+
+.icon-size {
+  font-size: 20px;
+  color: #8d949b;
+}
+
+.input-button{
+  font-size: 14px;
+}
+
+.legend-card{
+margin-left: 20px;
+}
+
+.labels{
+  margin-top: -8px ;
+}
+
+.legend{
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.mat-paginator {
+  position: fixed;
+  bottom: 5px;
+  margin-left: 18px;
+  width: 82%;
+  height: 7%;
+}
+
+.labelName{
+  font-size: 12px;
+}
+
+.no-data-block{
+  margin-top: 62px;
+  width: 100%;
+ // height: 300px;
+}
+
+.no-data-text{
+  padding: 30px;
+}
+
+.NB{
+  margin-top: -15px;
+  margin-left: 20px;
+  font-size: 12px;
+  }
+
+.reset-button{
+  margin-left: 30px;
+  margin-top: 20px;
+  .mat-icon{
+    font-size: 22px;
+  }
+}

@@ -1,0 +1,21 @@
+@import 'src/assets/styles/variable.scss';
+
+.close-button{
+    float: right;
+    top:-10px;
+    right:-10px;
+  }
+
+.card-user{
+  background: rgb(20, 92, 155);
+}
+
+.link{
+  color: black;
+}
+
+.contact{
+  a:hover{
+    color: $danger;
+}
+}

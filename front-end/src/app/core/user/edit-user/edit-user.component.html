@@ -1,0 +1,96 @@
+<a
+mat-icon-button
+class="close-button"
+[mat-dialog-close]="true"
+matTooltip="{{ matTooltipClose }}"
+>
+<mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title> {{'editUserCard' | translate}} </h2>
+<mat-dialog-content class="pb-3" >
+    <form [formGroup]="UserForm">
+        <div class="d-flex align-items-center m-b-15">
+            <img class="mat-card-avatar" [src]='imagePreview' >
+            <button mat-raised-button color="primary" class="m-l-15 input-file-button" >
+              <label for="files">{{'choose a file' | translate}}</label>
+                <input type="file" #filePicker  id="files" style="display:none"
+                (change)="onFileChange($event)"  accept="image/*">
+            </button>
+        </div>
+        <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <input type="text" matInput required formControlName="firstName" placeholder="{{ 'firstNamePlaceholder' | translate }}">
+                        <mat-error *ngIf="UserForm.controls['firstName'].hasError('required') && UserForm.controls['firstName'].touched">{{'Le prénom est obligatoire.' | translate}}</mat-error>
+                        <mat-error *ngIf="UserForm.controls['firstName'].hasError('minlength') && UserForm.controls['firstName'].touched">{{'Le prénom doit comporter au moins 3 caractères.' | translate}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <input type="text" matInput required formControlName="lastName"  placeholder="{{ 'lastNamePlaceholder' | translate }}">
+                        <mat-error *ngIf="UserForm.controls['lastName'].hasError('required') && UserForm.controls['lastName'].touched">{{'Le nom est obligatoire.' | translate}}</mat-error>
+                        <mat-error *ngIf="UserForm.controls['lastName'].hasError('minlength') && UserForm.controls['lastName'].touched">{{'Le prénom doit comporter au moins 3 caractères.' | translate}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <input type="email" matInput required formControlName="email" placeholder="{{ 'emailPlaceholder' | translate }}">
+                        <mat-error *ngIf="UserForm.controls['email'].hasError('required') && UserForm.controls['email'].touched">{{"L'adresse e-mail est obligatoire." | translate}}</mat-error>
+                        <mat-error *ngIf="UserForm.controls['email'].hasError('email') && UserForm.controls['email'].touched">{{'Vous devez fournir une adresse e-mail valide.' | translate}}</mat-error>
+                    </mat-form-field>
+                </div>
+
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <input required type="text" matInput formControlName="phoneNumber" placeholder="{{ 'phoneNumberPlaceholder' | translate }}" (keypress)="numberOnly($event)">
+                        <mat-error *ngIf="UserForm.controls['phoneNumber'].hasError('required')  && UserForm.controls['phoneNumber'].touched">{{'Le numéro de téléphone est obligatoire.' | translate}}</mat-error>
+                        <mat-error *ngIf="UserForm.controls['phoneNumber'].hasError('pattern') && UserForm.controls['phoneNumber'].touched">{{'Vous devez fournir un numéro de téléphone valide.' | translate}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <mat-label> {{ 'departmentLabel' | translate }}</mat-label>
+                        <mat-select matNativeControl required formControlName="department" >
+                            <mat-option *ngFor="let dept of departments"  [value]="dept" matTooltip="{{dept}}">{{dept}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="UserForm.controls['department'].hasError('required') && UserForm.controls['department'].touched">{{'Le departement est obligatoire.' | translate}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <input type="text" matInput required formControlName="position" placeholder="{{ 'positionPlaceholder' | translate }}">
+                        <mat-error *ngIf="UserForm.controls['position'].hasError('required') && UserForm.controls['position'].touched">{{'La fonction est obligatoire.' | translate}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <mat-label>{{ 'roleLabel' | translate }}</mat-label>
+                        <mat-select matNativeControl required formControlName="roleId">
+                            <mat-option *ngFor="let role of roles" [value]="role.id">{{role.name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="UserForm.controls['roleId'].hasError('required') && UserForm.controls['roleId'].touched">{{'Le role est obligatoire.' | translate}}</mat-error>
+                      </mat-form-field>
+                </div>
+            </div>
+            <mat-error class="error-role" *ngIf="!hasPermission(listRolesPermission)"> {{errorListRolePermission}} </mat-error>
+        </div>
+        <div align="end" fxLayoutGap="10px" class="buttons">
+        <button mat-button (click)="submit()" mat-flat-button color="warn" [disabled]="!UserForm.valid"> {{ 'editButton' | translate }} </button>
+        <button class="canceled" mat-button (click)="closeDialog()"> {{ 'cancelButton' | translate }} </button>
+        </div>
+    </form>
+</mat-dialog-content>

@@ -1,0 +1,64 @@
+<div fxLayout="row wrap">
+  <div fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title> {{ 'rolesCard' | translate}} </mat-card-title>
+        <div class="table-responsive">
+          <div fxLayout="row">
+            <div class="buttons">
+              <button mat-raised-button (click)="openAddDialog()" color="primary"
+                *ngIf="hasPermission(addRolesPermission)">
+                <mat-icon>add</mat-icon>
+                {{ 'addButton' | translate }}
+              </button>
+            </div>
+            <div class="ml-auto">
+              <mat-form-field appearance="outline" class="search-button">
+                <input class="input-size" matInput placeholder="{{ searchRolePlaceholder }}" #searchInput
+                  (keyup)="applyFilter($event.target.value)" />
+                <mat-icon class="icon-size" matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <table mat-table [dataSource]="dataSource" class="table role-list no-wrap" matSort>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{"roleNameColumn" | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef >
+                {{ roleDescriptionColumn }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.description }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>{{'action' | translate}}</th>
+              <td mat-cell *matCellDef="let element" class="action-link">
+                <a mat-icon-button (click)="openEditDialog(element)"
+                  *ngIf="hasPermission(editRolesPermission) && element.name!=role"><mat-icon>edit</mat-icon></a>
+                <a mat-icon-button color="warn" (click)="openDeleteDialog(element)"
+                  *ngIf="hasPermission(deleteRolesPermission) && element.name!=role"><mat-icon>delete_outline</mat-icon>
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+                {{ noDataFound }}
+              </td>
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[8, 16, 24, 32, 40]" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

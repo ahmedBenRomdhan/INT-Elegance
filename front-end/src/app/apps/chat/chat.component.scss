@@ -1,0 +1,175 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.selected-message {
+  background-color: #dfdbdb; /* Modify this color to make it darker */
+  color: #878787; /* Modify this color to make the text appear lighter */
+}
+.search-area {
+  display: flex;
+  align-items: center;
+  background-color: #f2f2f2;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.input-field {
+  position: relative;
+}
+.file-link {
+  display: inline-block; /* Display as an inline-block to control width */
+  margin-right: 5px; /* Add some spacing to the right */
+  padding: 2px 5px; /* Add padding for better visual separation */
+  background-color: #f1f1f1; /* Optionally add a background color */
+}
+.input-field input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  padding: 5px 10px;
+  width: 200px;
+}
+
+.input-field i {
+  position: absolute;
+  right: 0px;
+  padding-top: 5px;
+  color: #999;
+  cursor: pointer;
+}
+.mat-card-content {
+  min-height: 450px; /* Adjust the value as per your needs */
+}
+.chat-button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+
+  width: 50%;
+  cursor: pointer;
+}
+
+.project-button {
+  background-color: #e67e22;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  width: 50%;
+  cursor: pointer;
+}
+.online-status {
+
+  width: 8px;
+  height: 8px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  -ms-border-radius: 100px;
+  margin-right: 5px;
+  -o-border-radius: 100px;
+  border-radius: 100px;
+  display: flex;
+  background-color: #42b72a;
+  text-align: center;
+  line-height: 25px;
+  font-size: 13px;
+}
+.on-picture {
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  top: 37px;
+  left: 37px;
+  border: 2px solid white;
+}
+.status-circle {
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+}
+
+.typing-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin: 0 2px;
+  animation: typing-dot-animation 1s infinite;
+}
+
+@keyframes typing-dot-animation {
+  0% {
+    background-color: #ccc;
+  }
+  50% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: #ccc;
+  }
+}
+.typing-status {
+  padding: 5px;
+  font-size: 12px;
+  color: gray;
+
+  .typing-user:not(:last-child)::after {
+    content: ', ';
+  }
+}
+.scrollable-content {
+  max-height: 400px; /* Adjust the max-height value as needed */
+  overflow-y: auto;
+}
+
+.message-body {
+  white-space: normal;
+  word-break: break-word;
+}
+.text-muted {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.right{
+  float: right
+}
+.chat-block {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.message-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.file-input {
+  display: none;
+}
+.user-typing {
+  background-color: #f2f4f8;
+}
+.br {
+  display: block;
+  margin-bottom: 0em;
+}
+.bold-text {
+  font-weight: bold;
+}
+
+.normal-text {
+  font-weight: normal;
+}

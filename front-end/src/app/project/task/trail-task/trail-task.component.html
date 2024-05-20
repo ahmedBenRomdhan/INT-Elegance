@@ -1,0 +1,104 @@
+<mat-card>
+  <mat-card-content>
+    <div fxFlex.gt-md="93">
+      <mat-card-title>Historique</mat-card-title>
+      <mat-card-subtitle
+        >Dernières modifications sur le ticket #{{ taskId }}
+      </mat-card-subtitle>
+    </div>
+    <div>
+      <a
+        mat-icon-button
+        matTooltip="Revenir en arrière"
+        color="accent"
+        [routerLink]="['/project/details', projectId]"
+      >
+        <mat-icon>undo</mat-icon>
+      </a>
+      <a
+        mat-icon-button
+        *ngIf="taskStatus !== canceledStatus"
+        matTooltip="Modifier ticket"
+        color="accent"
+        [routerLink]="['/project/task/edit', taskId]"
+      >
+        <mat-icon>edit</mat-icon>
+      </a>
+    </div>
+  </mat-card-content>
+  <div class="no-data" *ngIf="trailTaskList.length === 0">
+    {{ noData }}
+    <br />
+    <br />
+  </div>
+  <div class="comment-widgets" *ngFor="let trail of obs | async">
+    <!-- Comment Row -->
+    <div class="d-flex flex-row comment-row" *ngIf="trail.eventType === 'POST'">
+      <div class="p-2">
+        <span class="round">
+          <img src="{{ trail.user.image }}" alt="user" width="50" />
+        </span>
+      </div>
+      <div class="comment-text w-100 p-t-0">
+        <h6 class="m-0">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+        </h6>
+        <p class="m-b-5 m-t-5 text-muted trail-text">
+          {{ trail.user.firstName }} {{ trail.user.lastName }} a crée le ticket
+        </p>
+        <div class="comment-footer">
+          <span class="text-muted pull-right trail-text">{{
+            trail.createdAt | date : " MMMM d, y, h:mm a"
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row comment-row" *ngIf="trail.eventType === 'PUT'">
+      <div class="p-2">
+        <span class="round">
+          <img src="{{ trail.user.image }}" alt="user" width="50" />
+        </span>
+      </div>
+      <div class="comment-text w-100 p-t-0">
+        <h6 class="m-0">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+        </h6>
+        <ng-container>
+          <p
+            class="m-b-5 m-t-5 text-muted trail-text"
+            *ngFor="let att of trail.attributes; let i = index"
+          >
+            <span *ngIf="att !== 'userId'">
+              {{ trail.user.firstName }} {{ trail.user.lastName }}
+              <span class="oldValues">
+                a modifié {{ att }}
+                <span *ngIf="trail.oldValues[i] !== null">
+                  de {{ trail.oldValues[i] }}
+                </span>
+              </span>
+              à <span class="newValues">{{ trail.newValues[i] }}</span>
+            </span>
+            <span *ngIf="att === 'userId' && trail.newValues[i] === null">
+              {{ trail.user.firstName }} {{ trail.user.lastName }}
+              <span class="oldValues"> a retiré {{ trail.oldValues[i] }} </span>
+            </span>
+            <span *ngIf="att === 'userId' && trail.newValues[i] !== null">
+              {{ trail.user.firstName }} {{ trail.user.lastName }}
+              <span class="newValues">
+                a assigné le ticket à {{ trail.newValues[i] }}
+              </span>
+            </span>
+          </p>
+        </ng-container>
+        <div class="comment-footer">
+          <span class="text-muted pull-right trail-text">{{
+            trail.createdAt | date : " MMMM d, y, h:mm a"
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-paginator
+    [pageSizeOptions]="[5, 25, 50, 100, 250, 500, 1000]"
+  ></mat-paginator>
+</mat-card>

@@ -1,0 +1,22 @@
+Bonjour,
+
+J'espère que vous vous portez bien ! 
+Je tiens à vous informer de l'avancement de notre travail pour les deux dernières semaines.
+En effet, on a achevé la réalisation du sprint 0 par les points suivants : 
+- Recherches et étude de l'existant de quelques outils de gestion de projet
+- Définir les fonctionnalités du projet
+- Choix des technologies (MEAN Stack) 
+- Choix de méthodologie de travail (Scrum)
+- Conception (diagrammes de cas d'utilisation globale + détaillés et diagramme de classe)
+
+ Vous trouverez ci-dessou le lien de la présentation qui résume ces points :
+https://docs.google.com/presentation/d/1gCL64MvK4UhvSjzkoBLtJ3MTLq0D6rc8-9BDzEa6WNU/edit?usp=sharing
+
+De plus nous avons assuré ces tâches : 
+- Validation du sujet de stage par les superviseurs académiques 
+- Autoformation 
+-Rédaction du chapitre 1 du rapport de stage
+
+Nous notons aussi que pour le début de la semaine prochaine on va réaliser le Product Backlog et diviser les tâches. 
+
+Bonne réception.

@@ -1,0 +1,145 @@
+<div fxLayout="row">
+  <div fxLayoutGap="15px" class="project-buttons">
+    <button mat-raised-button color="primary" (click)="openAddDialog()" *ngIf="hasPermission(addProjectsPermission)">
+      <mat-icon>add</mat-icon>
+      {{'Ajouter' | translate}}
+    </button>
+    <button *ngIf="originalProjectList.length > 0" mat-raised-button color="primary" (click)="togglePanel()">
+      <mat-icon>filter_list</mat-icon>
+      {{'Filtrer' | translate}}
+    </button>
+  </div>
+  <div class="ml-auto" *ngIf="originalProjectList.length > 0">
+    <mat-form-field appearance="outline" class="search-button">
+      <input class="input-button" matInput placeholder="{{'Rechercher Projet' | translate}}" (keyup)="applyFilter($event)" #searchInput />
+      <mat-icon class="icon-size" matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+</div>
+<mat-accordion>
+  <mat-expansion-panel hideToggle [expanded]="panelOpenState">
+    <div fxLayout="row wrap" fxLayoutGap="16px">
+      <div fxFlex.gt-md="23" fxFlex.gt-lg="25" fxFlex="100">
+        <mat-form-field>
+          <mat-label>Status</mat-label>
+          <mat-select [value]="selectedStatus" (selectionChange)="applyStatusFilter($event)">
+            <mat-option value="All" selected>Tous</mat-option>
+            <mat-option value="{{ newStatus }}">{{ newStatus }}</mat-option>
+            <mat-option value="{{ inProgressStatus }}">{{
+              inProgressStatus
+              }}</mat-option>
+            <mat-option value="{{ completedStatus }}">{{
+              completedStatus
+              }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex.gt-md="23" fxFlex.gt-lg="25" fxFlex="100">
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <mat-select [value]="selectedType" (selectionChange)="applyTypeFilter($event)">
+            <mat-option value="All" selected>Tous</mat-option>
+            <mat-option value="{{ applicatioWeb }}">{{
+              'applicatioWeb' | translate
+              }}</mat-option>
+            <mat-option value="{{ applicationMobile }}">{{
+              'applicationMobile' | translate
+              }}</mat-option>
+            <mat-option value="{{ embeddedSystems }}">{{
+              'embeddedSystems' | translate
+              }}</mat-option>
+            <mat-option value="{{ electronicSystems }}">{{
+              'electronicSystems' | translate
+              }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex.gt-md="23" fxFlex.gt-lg="25" fxFlex="100">
+        <mat-form-field>
+          <mat-label>{{'Date de début' | translate}}</mat-label>
+          <input matInput [max]="maxStartDate" [matDatepicker]="startDatePicker" (dateChange)="applyDateFilter()"
+            [(ngModel)]="startDate" readonly />
+          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex.gt-md="23" fxFlex.gt-lg="25" fxFlex="100">
+        <mat-form-field>
+          <mat-label>{{'Date de fin' | translate}}</mat-label>
+          <input matInput [min]="minEndDate" [matDatepicker]="endDatePicker" (dateChange)="applyDateFilter()"
+            [(ngModel)]="endDate" readonly />
+          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+          <mat-error *ngIf="errorEndDate">{{errorEndDateMessage}}</mat-error>
+        </mat-form-field>
+        <div fxFlex.gt-md="5" fxFlex.gt-lg="25" fxFlex="100">
+          <a matTooltip="Effacer les champs" class="reset-button" mat-icon-button (click)="resetFields()"> <mat-icon>youtube_searched_for</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+<div fxLayout="row wrap" fxLayoutGap="0px" class="legend-card" *ngIf="dataSource.data.length > 0">
+  <div class="legend">{{ 'legende' | translate }} :</div>
+  <div class="labels" *ngFor="let lab of legends" (click)="labelChange(lab.name)">
+    <div class="d-flex align-items-center inbox-list" [class.bg-light]="lab.active">
+      <mat-icon class="m-r-10 font-20" [style.color]="lab.color">{{
+        lab.icon
+        }}</mat-icon>
+      <span class="labelName">{{ lab.name }}</span>
+    </div>
+  </div>
+</div>
+
+<span fxLayout="row" class="NB" *ngIf="dataSource.data.length > 0">
+  {{'nB' | translate}}: {{'NB' | translate}}
+
+</span>
+<div fxLayout="row wrap" class="course-app">
+  <div fxFlex.gt-md="33.33" fxFlex.gt-lg="30" fxFlex="100" *ngFor="let project of obs | async">
+    <mat-card>
+      <mat-card-header [ngClass]="getStatusClass(project.status)">
+        <mat-card-title>
+          <span class="project-name" matTooltip="{{ project.name }}">{{
+            project.name
+            }}</span>
+          <span class="project-type">
+            {{ project.type }}
+          </span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="text-center">
+        <small>De {{ project.startDate | date : "mediumDate" }} A :
+          {{ project.endDate | date : "mediumDate" }}
+        </small>
+      </mat-card-content>
+      <mat-card-actions class="text-center">
+        <a mat-icon-button>
+          <mat-icon [routerLink]="['/project/details', project.id]" *ngIf="hasPermission(getProjectDetailsPermission)"
+            matTooltip="{{'Consulter détails' | translate}}">remove_red_eye</mat-icon>
+        </a>
+        <a mat-icon-button (click)="openEditDialog(project)" *ngIf="hasPermission(editProjectsPermission)"
+          matTooltip="{{'Modifier projet' | translate}}"><mat-icon>edit</mat-icon></a>
+        <a *ngIf="hasPermission(trailProjectPermission)" mat-icon-button matTooltip="{{'Consulter historique' | translate}}"
+          [routerLink]="['/project/trail', project.id]"><mat-icon>history</mat-icon>
+        </a>
+        <a mat-icon-button color="warn" (click)="openDeleteDialog(project)"
+          *ngIf="hasPermission(deleteProjectsPermission) && project.status === newStatus" matTooltip="{{'Supprimer projet' | translate}}">
+          <mat-icon>delete_outline</mat-icon>
+        </a>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <mat-paginator [pageSizeOptions]="[
+      6, 12, 18, 24, 30, 36, 42, 48, 56, 62, 68, 74, 80, 86, 92, 98
+    ]"></mat-paginator>
+</div>
+
+<div fxLayout="row wrap" *ngIf="dataSource.data.length === 0">
+  <mat-card class="no-data-block">
+    <div class="no-data-text">
+      {{ noData }}
+    </div>
+  </mat-card>
+</div>

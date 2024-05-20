@@ -1,0 +1,301 @@
+<div fxLayout="row wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div class="box p-20 bg-danger text-center cursor-pointer" (click)="getUserProjects()"      >
+        <h1 class="font-light text-white m-0">{{ totalProjects }}</h1>
+        <h6 class="text-white m-0">{{ card1 }}</h6>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <!-- column -->
+  <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div
+        class="box p-20 bg-info text-center cursor-pointer"
+        (click)="btnTasksClick('')"
+      >
+        <h1 class="font-light text-white m-0">{{ totalTickets }}</h1>
+        <h6 class="text-white m-0">{{ card2 }}</h6>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <!-- column -->
+  <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div
+        class="box p-20 bg-success text-center cursor-pointer"
+        (click)="btnTasksClick(newStatus)"
+      >
+        <h1 class="font-light text-white m-0">{{ newTickets }}</h1>
+        <h6 class="text-white m-0">{{ card3 }}</h6>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <!-- column -->
+  <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div
+        class="box p-20 bg-warning text-center cursor-pointer"
+        (click)="btnTasksClick(inProgressStatus)"
+      >
+        <h1 class="font-light text-white m-0">{{ inProgressTickets }}</h1>
+        <h6 class="text-white m-0">{{ card4 }}</h6>
+      </div>
+    </mat-card>
+  </div>
+  <div fxLayout="row wrap" class="card">
+    <div fxFlex="100">
+      <mat-card>
+        <mat-card-content>
+          <div class="table-responsive">
+            <div fxLayout="row">
+              <div fxFlex.gt-md="19" fxFlex.gt-lg="25" fxFlex="100">
+                <mat-form-field>
+                  <mat-label>{{ label }}</mat-label>
+                  <mat-select
+                    class="filtres"
+                    required
+                    [value]="selectedProject"
+                    (selectionChange)="applyProjectFilter($event)"
+                  >
+                    <mat-option *ngIf="projectList.length === 0" disabled>{{
+                      noResult
+                    }}</mat-option>
+                    <mat-option value="All" selected>Tous</mat-option>
+                    <mat-option
+                      *ngFor="let project of projectList"
+                      [value]="project.id"
+                    >
+                      {{ project.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="ml-auto" fxLayoutGap="15px">
+                <div fxFlex.gt-md="50">
+                  <mat-form-field appearance="outline" class="search-button">
+                    <input
+                      class="input-button"
+                      matInput
+                      placeholder="Rechercher Ticket"
+                      (keyup)="applyFilter($event.target.value)"
+                    />
+                    <mat-icon class="icon-size" matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+                <span>
+                  <button
+                    matTooltip="Cacher/Afficher des colonnes"
+                    mat-raised-button
+                    color="accent"
+                    #menuTrigger="matMenuTrigger"
+                    [matMenuTriggerFor]="mainMenuButton"
+                  >
+                    <mat-icon>view_list</mat-icon>Colonnes
+                  </button>
+                </span>
+              </div>
+              <mat-menu #mainMenuButton="matMenu">
+                <span
+                  (click)="$event.stopPropagation()"
+                  *ngFor="let column of columnShowHideList; index as i"
+                >
+                  <mat-slide-toggle
+                    class="mat-menu"
+                    [(ngModel)]="column.isActive"
+                    (change)="toggleColumn(column)"
+                  >
+                  </mat-slide-toggle>
+                  <span class="mat-menuList">
+                    {{ column.name }}
+                  </span>
+                  <br />
+                </span>
+              </mat-menu>
+            </div>
+            <table
+            class="table"
+            id="tasks-table"
+            mat-table
+            [dataSource]="dataSource"
+          >
+            <ng-container matColumnDef="ID">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let element">
+                <mat-chip-list>
+                  <mat-chip [ngClass]="getTypeClass(element.type)" selected>
+                    #{{ element.id }}
+                  </mat-chip>
+                </mat-chip-list>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Type">
+              <th mat-header-cell *matHeaderCellDef>Type</th>
+              <td mat-cell *matCellDef="let element">
+                <mat-chip-list>
+                  <mat-chip [ngClass]="getTypeClass(element.type)" selected>
+                    {{ element.type }}
+                  </mat-chip>
+                </mat-chip-list>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Nom">
+              <th mat-header-cell *matHeaderCellDef>Nom</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.name }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.status }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Priorité">
+              <th mat-header-cell *matHeaderCellDef>Priorité</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.priority }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Date Début">
+              <th mat-header-cell *matHeaderCellDef>Date Début</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.startDate | date }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Date Fin">
+              <th mat-header-cell *matHeaderCellDef>Date Fin</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.endDate | date }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Temps Estimé">
+              <th mat-header-cell *matHeaderCellDef>Temps Estimé</th>
+              <td mat-cell *matCellDef="let element">{{ element.estimatedTime }} H</td>
+            </ng-container>
+            <ng-container matColumnDef="Temps Passé">
+              <th mat-header-cell *matHeaderCellDef>Temps Passé</th>
+              <td mat-cell *matCellDef="let element">{{ element.passedTime }} H</td>
+            </ng-container>
+            <ng-container matColumnDef="Réalisation">
+              <th mat-header-cell *matHeaderCellDef>Réalisation</th>
+              <td mat-cell *matCellDef="let element">
+                <span
+                  ><mat-progress-bar
+                    color="accent"
+                    mode="determinate"
+                    [value]="element.realisation"
+                  ></mat-progress-bar>
+                  {{ element.realisation }} %</span
+                >
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Assigné à">
+              <th mat-header-cell *matHeaderCellDef>Assigné à</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="d-flex" *ngIf="element.user">
+                  <img
+                    class="mat-card-avatar"
+                    [src]="element.user.image"
+                    matTooltip=" {{ element.user.firstName }} {{
+                      element.user.lastName
+                    }}"
+                  />
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Projet">
+              <th mat-header-cell *matHeaderCellDef>Projet</th>
+              <td mat-cell *matCellDef="let element">
+                <a
+                  [routerLink]=""
+                  (click)="viewProjectDetails(element.phase.project.id)"
+                  matTooltip="Consulter le projet"
+                >
+                  {{ element.phase.project.name }}
+                </a>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Actions">
+              <th mat-header-cell *matHeaderCellDef><span>Actions</span></th>
+              <td mat-cell *matCellDef="let element">
+                <div fxLayoutGap="0px">
+                  <a
+                    mat-icon-button
+                    matTooltip="Lien ticket"
+                    (click)="getUrl(element.url)"
+                    [disabled]="!element.url"
+                    ><mat-icon>link</mat-icon></a
+                  >
+                  <a
+                    mat-icon-button
+                    matTooltip="Modifier ticket"
+                    [href]="['/project/task/edit/' + element.id]"
+                    [disabled]="element.status === canceledStatus"
+                    *ngIf="hasPermission(editTasksPermission)"
+                    ><mat-icon>edit</mat-icon></a
+                  >
+                  <a
+                    matTooltip="Ajouter un ticket enfant"
+                    mat-icon-button
+                    color="accent"
+                    [href]="['/project/task/add-child/'+ element.id]"
+                    [disabled]="element.status === canceledStatus"
+                    *ngIf="hasPermission(addChildTasksPermission)"
+                    ><mat-icon>add_circle</mat-icon>
+                  </a>
+                  <a
+                    matTooltip="Consulter historique"
+                    mat-icon-button
+                    [routerLink]="['/project/task/trail', element.id]"
+                    *ngIf="hasPermission(trailTasksPermission)"
+                    ><mat-icon>history</mat-icon>
+                  </a>
+                  <a
+                    mat-icon-button
+                    matTooltip="Supprimer ticket"
+                    color="warn"
+                    (click)="openDeleteDialog(element)"
+                    *ngIf="element.status === newStatus && hasPermission(deleteTasksPermission)"
+                    ><mat-icon>delete_outline</mat-icon>
+                  </a>
+                  <a
+                  mat-icon-button
+                  matTooltip="Annuler ticket"
+                  color="warn"
+                  (click)="openCancelDialog(element)"
+                  *ngIf="element.status !== newStatus && element.status !== completedStatus && element.status !== canceledStatus && hasPermission(deleteTasksPermission)"
+                  ><mat-icon>cancel</mat-icon>
+                </a>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+                {{noDataFound}}
+              </td>
+            </tr>
+            <tr
+              mat-row
+              *matRowDef="let element; columns: displayedColumns"
+              [ngClass]="{ 'gray-background': element.status === canceledStatus }"
+            ></tr>
+          </table>
+            <mat-paginator
+              [pageSizeOptions]="[
+                7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98
+              ]"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

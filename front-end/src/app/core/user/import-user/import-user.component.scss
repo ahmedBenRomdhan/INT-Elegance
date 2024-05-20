@@ -1,0 +1,30 @@
+@import 'src/assets/styles/variable.scss';
+
+.canceled{
+    background-color: #e2eaed;
+}
+.buttons{
+    margin-top: 62px;
+}
+.legend{
+    margin-top: 8px;
+    font-size: 12px;
+    a:hover{
+        color: $danger;
+    }
+}
+.mat-error{
+    font-size: 14px;
+    margin-top: 15px;
+    margin-bottom: -39px;
+}
+
+.link-file{
+    color: $primary
+}
+
+.close-button{
+    float: right;
+    top:-10px;
+    right:-10px;
+  }

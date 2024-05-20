@@ -1,0 +1,42 @@
+<a
+mat-icon-button
+class="close-button"
+[mat-dialog-close]="true"
+matTooltip="{{ matTooltipClose }}"
+>
+<mat-icon>close</mat-icon>
+</a>
+<h2 class="font-medium" mat-dialog-title>{{ importUserCard }}</h2>
+<form enctype="multipart/form-data" [class.hidden]="isLoading">
+  <div fxLayout="row wrap" class="align-items-center">
+    <div class="d-flex align-items-center m-b-15">
+      <img class="mat-card-avatar" [src]="imagePreview" (click)="downloadFile()"/>
+      <button
+        mat-raised-button
+        color="primary"
+        class="m-l-15 input-file-button"
+      >
+        <input
+          type="file"
+          accept=".csv,application/vnd,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" 
+          (change)="onFileChange($event.target.files)"
+        />
+      </button>
+    </div>
+    <span class="legend"> {{ legend }}</span>
+    <div class="legend">
+      {{ template }}
+      <a href="javascript:void(0);" (click)="downloadFile()" class="link-file"> cliquer ici </a>
+    </div>
+    <mat-error *ngIf="fileError"> {{ errorTypeMessage }}</mat-error>
+    <mat-error *ngIf="noFileError"> {{ errorMessage }}</mat-error>
+  </div>
+  <div align="end" fxLayoutGap="10px" class="buttons">
+    <button mat-button mat-flat-button color="warn" (click)="onSubmit()">
+      {{ importButton }}
+    </button>
+    <button mat-button type="button" class="canceled" (click)="closeDialog()">
+      {{ cancelButton }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,136 @@
+<div fxLayout="row wrap">
+    <!-- Card column -->
+    <div fxFlex.gt-lg="25" fxFlex.gt-md="40" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-card class="oh text-center little-profile">
+        <img
+          mat-card-image
+          src="assets/images/background/back.jpg"
+          class="profile-bg-height"
+          alt="Photo of a Shiba Inu"
+        />
+        <mat-card-content class="carduser">
+          <div class="pro-img" fxLayout="row" fxLayoutAlign="center start">
+            <div>
+                <img [src]="imagePreview">
+              </div>
+              <div class="ml-0">
+                <a mat-icon-button (click)='filePicker.click()'>
+                  <mat-icon> add_a_photo</mat-icon>
+                </a>
+                <input type="file" style="visibility: hidden ; width: 0px" #filePicker  id="importFile"
+                (change)="onFileChange($event)"  accept="image/*">
+              </div>
+         </div>
+         
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <!-- Card column -->
+    <!-- Card column -->
+    <div fxFlex.gt-lg="75" fxFlex.gt-md="60" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-card>
+        <mat-tab-group>
+          <!-- Tab 1 -->
+          <mat-tab label="{{'Modifier profil' | translate}}">
+            <form [formGroup]="UserForm">
+            <mat-card-content>
+                <div fxLayout="row wrap">
+                  <!-- column -->
+                  <div fxFlex.gt-sm="100" fxFlex="100">
+                    <mat-form-field>
+                        <input type="text" matInput required formControlName="firstName" placeholder="{{'Prénom' | translate}}">
+                        <mat-error *ngIf="UserForm.controls['firstName'].hasError('required') && UserForm.controls['firstName'].touched">{{'Le prénom est obligatoire.' | translate}}</mat-error>
+                        <mat-error *ngIf="UserForm.controls['firstName'].hasError('minlength') && UserForm.controls['firstName'].touched">{{'Le prénom doit comporter au moins 3 caractères.' | translate}}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- column -->
+                  <div fxFlex.gt-sm="100" fxFlex="100">
+                    <mat-form-field>
+                        <input type="text" matInput required formControlName="lastName"  placeholder="{{'nomm' | translate}}">
+                        <mat-error *ngIf="UserForm.controls['lastName'].hasError('required') && UserForm.controls['lastName'].touched">{{'Le nom est obligatoire.' | translate}}</mat-error>
+                        <mat-error *ngIf="UserForm.controls['lastName'].hasError('minlength') && UserForm.controls['lastName'].touched">{{'Le prénom doit comporter au moins 3 caractères.' | translate}}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- column -->
+                  <div fxFlex.gt-sm="100" fxFlex="100">
+                    <mat-form-field>
+                            <input type="email" matInput required formControlName="email" placeholder="{{'Addresse E-mail' | translate}}" readonly="true">
+                            <mat-error *ngIf="UserForm.controls['email'].hasError('required') && UserForm.controls['email'].touched">{{"L'addresse e-mail est obligatoire." | translate}}</mat-error>
+                            <mat-error *ngIf="UserForm.controls['email'].hasError('email') && UserForm.controls['email'].touched">{{'Vous devez fournir une adresse e-mail valide.' | translate}}</mat-error>
+                        </mat-form-field>
+                  </div>
+                  <!-- column -->
+                  <div fxFlex.gt-sm="100" fxFlex="100">
+                    <mat-form-field>
+                        <input type="text" matInput required formControlName="phoneNumber" placeholder="{{'Numéro de Téléphone' | translate}}" (keypress)="numberOnly($event)">
+                        <mat-error *ngIf="UserForm.controls['phoneNumber'].hasError('required')  && UserForm.controls['phoneNumber'].touched">{{'Le numéro de téléphone est obligatoire.' | translate}}</mat-error>
+                        <mat-error *ngIf="UserForm.controls['phoneNumber'].hasError('pattern') && UserForm.controls['phoneNumber'].touched">{{'Vous devez fournir un numéro de téléphone valide.' | translate}}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- column -->
+                  <div fxFlex.gt-sm="100" fxFlex="100">
+                    <mat-form-field>
+                            <mat-label>{{'Departement' | translate}}</mat-label>
+                            <input type="text" matInput  formControlName="department" readonly="true">
+                    </mat-form-field>
+                  </div>
+                 <!-- column -->
+                 <div fxFlex.gt-sm="100" fxFlex="100">
+                    <mat-form-field>
+                        <mat-label>{{'Fonction' | translate}}</mat-label>
+                        <input type="text" matInput  formControlName="position" readonly="true">
+                    </mat-form-field>
+                  </div>
+                 <!-- column -->
+                 <div fxFlex.gt-sm="100" fxFlex="100">
+                    <mat-form-field>
+                        <mat-label>{{'Role' | translate}}</mat-label>
+                        <input type="text" matInput  formControlName="roleId" readonly="true">
+                    </mat-form-field>
+                  </div>
+                  <!-- column -->
+                  <div fxLayoutGap="10px" class="buttons" *ngIf="hasPermission(editUsersPermission)">
+                    <button mat-button (click)="updateUser()" mat-flat-button color="warn" [disabled]="!UserForm.valid">{{'Modifier' | translate}}</button>
+                    <button class="canceled"  mat-button (click)="cancel()">{{'Annuler' | translate}}</button>
+                  </div>
+                </div>
+            </mat-card-content>
+          </form>
+          </mat-tab>
+           <!-- Tab 2 -->
+           <mat-tab label="{{'Changer mot de passe' | translate}}">
+            <form [formGroup]="passwordForm">
+            <mat-card-content>
+              <div fxLayout="row wrap">
+              <div fxFlex.gt-sm="100" fxFlex="100">
+                <mat-form-field>
+                    <input type="password" matInput required formControlName="oldPassword" placeholder="{{'Ancien mot de passe' | translate}}">
+                    <mat-error *ngIf="passwordForm.controls['oldPassword'].hasError('required') && passwordForm.controls['oldPassword'].touched">{{"L'ancien mot de passe est obligatoire." | translate}}</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxFlex.gt-sm="100" fxFlex="100">
+                <mat-form-field>
+                    <input type="password" matInput required formControlName="password" placeholder="{{'Nouveau mot de passe' | translate}}">
+                    <mat-error *ngIf="passwordForm.controls['password'].hasError('required') && passwordForm.controls['password'].touched">{{'Le nouveau mot de passe est obligatoire.' | translate}}</mat-error>
+                    <mat-error *ngIf="passwordForm.controls['password'].hasError('pattern') && passwordForm.controls['password'].touched">{{'Le nouveau mot de passe doit contenir au moins une majuscule, une minuscule , un caractère spécial et un chiffre (longueur min : 8 ).' | translate}}</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxFlex.gt-sm="100" fxFlex="100">
+                <mat-form-field>
+                    <input type="password" matInput required formControlName="confirmPassword" placeholder="{{'Confirmer le nouveau mot de passe' | translate}}">
+                    <mat-error *ngIf="passwordForm.controls['confirmPassword'].hasError('required') && passwordForm.controls['password'].touched">{{'Vous devez confirmer votre mot de passe.' | translate}}</mat-error>
+                    <mat-error *ngIf="passwordForm.controls['confirmPassword'].errors?.equalTo">{{'Les mots de passe ne correspondent pas.' | translate}}</mat-error>                </mat-form-field>
+              </div>
+              <div  fxLayoutGap="10px" class="password-button" >
+                <button mat-button (click)="updatePassword()" mat-flat-button color="warn" [disabled]="!passwordForm.valid">{{'Changer mot de passe' | translate}}</button>
+                <button class="canceled"  mat-button (click)="cancel()">{{'Annuler' | translate}}</button>
+              </div>
+              </div>
+              </mat-card-content>
+              </form>
+              </mat-tab>
+        </mat-tab-group>
+      </mat-card>
+    </div>
+</div>

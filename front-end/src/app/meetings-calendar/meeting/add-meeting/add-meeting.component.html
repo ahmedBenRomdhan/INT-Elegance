@@ -1,0 +1,253 @@
+<a
+  mat-icon-button
+  class="close-button"
+  [mat-dialog-close]="true"
+  matTooltip="{{ matTooltipClose }}"
+>
+  <mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title>{{ addMeetingCard }}</h2>
+<mat-dialog-content class="pb-3">
+  <form [formGroup]="meetingForm">
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              required
+              [formControl]="meetingForm.controls['title']"
+              placeholder="{{ 'titlePlaceholder' | translate }}"
+            />
+            <mat-error
+              *ngIf="
+                meetingForm.controls['title'].hasError('required') &&
+                meetingForm.controls['title'].touched
+              "
+            >
+              {{ 'requiredTitleError' | translate}}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                meetingForm.controls['title'].hasError('minlength') &&
+                meetingForm.controls['title'].touched
+              "
+            >
+              {{ 'minLengthTitleError' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <mat-label>{{'Collaborateurs' | translate}}</mat-label>
+            <mat-select
+              matNativeControl
+              [formControl]="meetingForm.controls['users']"
+              [multiple]="true"
+            >
+              <mat-option *ngIf="usersList.length === 0" [disabled]="true">
+                {{ noDataFound }}
+              </mat-option>
+              <mat-option *ngFor="let user of usersList" [value]="user.id">
+                <div fxFlex="100" fxFlex.gt-md="12">
+                  <img alt="user" class="mat-card-avatar" [src]="user.image" />
+                </div>
+                <div fxFlex="100" fxFlex.gt-md="88" class="user-details">
+                  <span>{{ user.firstName }} {{ user.lastName }}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label> {{ 'StartDateLabel' | translate}} </mat-label>
+            <input
+              matInput
+              [formControl]="meetingForm.controls['start']"
+              [min]="minStartDate"
+              [max]="maxStartDate"
+              [matDatepicker]="startDate"
+              (dateChange)="chooseRoom()"
+              required
+              readonly
+            />
+            <mat-datepicker-toggle matSuffix [for]="startDate">
+            </mat-datepicker-toggle>
+            <mat-datepicker #startDate> </mat-datepicker>
+            <mat-error
+              *ngIf="
+                meetingForm.controls['start'].hasError('required') &&
+                meetingForm.controls['start'].touched
+              "
+            >
+              {{ 'requiredDateError' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label> {{ 'endDateLabel' | translate }} </mat-label>
+            <input
+              matInput
+              [formControl]="meetingForm.controls['end']"
+              [min]="minEndDate"
+              [matDatepicker]="endDate"
+              required
+              (dateChange)="chooseRoom()"
+              readonly
+            />
+            <mat-datepicker-toggle matSuffix [for]="endDate">
+            </mat-datepicker-toggle>
+            <mat-datepicker #endDate> </mat-datepicker>
+            <mat-error
+              *ngIf="
+                meetingForm.controls['end'].hasError('required') &&
+                meetingForm.controls['end'].touched
+              "
+            >
+              {{ 'requiredDateError' | translate }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                meetingForm.controls['end'].value &&
+                meetingForm.controls['end'].value <
+                  meetingForm.controls['start'].value
+              "
+            >
+              {{ errorEndDateMessage }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label> {{ 'startTimeLabel' | translate }} </mat-label>
+            <input
+              matInput
+              type="time"
+              [formControl]="meetingForm.controls['startTime']"
+              required
+              (change)="chooseRoom()"
+            />
+            <mat-error
+              *ngIf="meetingForm.controls['startTime'].hasError('error_time')"
+            >
+              {{ errorCurrentTimeMessage }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                meetingForm.controls['startTime'].hasError('required') &&
+                meetingForm.controls['startTime'].touched
+              "
+            >
+              {{ 'requiredStartTimeError' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label> {{ 'endTimeLabel' | translate }} </mat-label>
+            <input
+              matInput
+              [formControl]="meetingForm.controls['endTime']"
+              type="time"
+              required
+              (change)="chooseRoom()"
+            />
+            <mat-error
+              *ngIf="meetingForm.controls['endTime'].hasError('error_endtime')"
+            >
+              {{ errorEndTimeMessage  }}
+            </mat-error>
+            <mat-error
+              *ngIf="meetingForm.controls['endTime'].hasError('error_time')"
+            >
+              {{ errorCurrentTimeMessage }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                meetingForm.controls['endTime'].hasError('required') &&
+                meetingForm.controls['endTime'].touched
+              "
+            >
+              {{ 'requiredEndTimeError' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <mat-label> {{ 'roomLabel' | translate }} </mat-label>
+            <mat-select
+              matNativeControl
+              [formControl]="meetingForm.controls['roomId']"
+              [disabled]="isRoomSelectDisabled"
+              required
+            >
+              <mat-option *ngIf="rooms.length == 0" disabled>{{
+                noAvailableRoom
+              }}</mat-option>
+              <mat-option *ngFor="let room of rooms" [value]="room.id">{{
+                room.name
+              }}</mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                meetingForm.controls['roomId'].hasError('required') &&
+                meetingForm.controls['roomId'].touched
+              "
+            >
+              {{ "requiredRoomError" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="100">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <textarea
+              type="text"
+              matInput
+              [formControl]="meetingForm.controls['description']"
+              placeholder="Description"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div align="end" fxLayoutGap="10px">
+      <button
+        mat-button
+        (click)="submit()"
+        mat-flat-button
+        color="warn"
+        [disabled]="!meetingForm.valid"
+      >
+        {{ 'addButton' | translate }}
+      </button>
+      <button class="canceled" mat-button (click)="closeDialog()">
+        {{ 'cancelButton' | translate }}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

@@ -1,0 +1,42 @@
+services:
+  mysqldb:
+    image: mariadb:10.4.25
+    container_name: mysql-db
+    environment:
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+    ports:
+      - "$MYSQL_LOCAL_PORT:$MYSQL_PORT"
+    env_file:
+      - .env
+  backend:
+    depends_on: [mysqldb]
+    image: ahmedbenromdhane/intelegance:back-end
+    ports:
+      - "$BACKEND_LOCAL_PORT:$BACKEND_PORT"
+    env_file:
+      - .env
+
+  migration:
+    depends_on: [mysqldb]
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile-migration
+  frontend:
+    build: ahmedbenromdhane/intelegance:latest
+    ports:
+      - "$FRONTEND_LOCAL_PORT:$FRONTEND_PORT"
+    env_file:
+      - .env
+
+  phpmyadmin:
+    depends_on: [mysqldb]
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "$PHPMYADMIN_LOCAL_PORT:$PHPMYADMIN_PORT"
+    environment:
+      PMA_HOST: $PMA_HOST
+      PMA_PORT: $PMA_PORT
+      PMA_USER: $PMA_USER
+      PMA_PASSWORD: $PMA_PASSWORD

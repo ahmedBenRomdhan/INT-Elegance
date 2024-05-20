@@ -1,0 +1,29 @@
+<div>
+  <a
+    mat-icon-button
+    class="close-button"
+    [mat-dialog-close]="true"
+    matTooltip="{{ matTooltipClose }}"
+  >
+    <mat-icon>close</mat-icon>
+  </a>
+  <h2 mat-dialog-title>{{ profilUserCard }}</h2>
+  <mat-dialog-content class="text-center">
+    <img src="{{ data.image }}" class="img-circle border p-5" width="100" />
+    <h4 class="card-title m-t-15 m-b-0">
+      {{ data.firstName }} {{ data.lastName }}
+    </h4>
+    <small class="text-muted"
+      >{{ data.department }} - {{ data.position }}
+    </small>
+
+    <div class="m-t-20">
+      <span>
+        <i class="fa fa-envelope m-r-10"></i> <a class="link" href="mailto:{{ data.email }}">{{ data.email }}</a>
+        <br />
+        <br />
+        <i *ngIf="data.phoneNumber" class="fa fa-phone m-r-10"></i>{{ data.phoneNumber }}</span
+      >
+    </div>
+  </mat-dialog-content>
+</div>

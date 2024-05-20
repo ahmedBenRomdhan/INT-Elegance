@@ -1,0 +1,253 @@
+<mat-card>
+    <mat-card-content>
+      <div fxLayout="row">
+        <div class="title">
+          <h2 mat-dialog-title >{{'ajouter Ticket' | translate}}</h2>
+        </div>
+        <div class="ml-auto">
+          <span class="bg-dark" [ngClass]="getStatusClass()">
+            {{ phaseTitle }}
+          </span>
+        </div>
+      </div>
+      <mat-dialog-content class="pb-3">
+        <form [formGroup]="taskForm">
+          <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <mat-select
+                    placeholder="Type"
+                    [formControl]="taskForm.controls['type']"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let tracker of trackers"
+                      [value]="tracker"
+                    >
+                      {{ tracker }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      taskForm.controls['type'].hasError('required') &&
+                      taskForm.controls['type'].touched
+                    "
+                    >{{'Le type est obligatoire.' | translate}}</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <input
+                    type="text"
+                    matInput
+                    required
+                    [formControl]="taskForm.controls['name']"
+                    placeholder="Nom"
+                  />
+                  <mat-error
+                    *ngIf="
+                      taskForm.controls['name'].hasError('required') &&
+                      taskForm.controls['name'].touched
+                    "
+                    >{{'Le nom de ticket est obligatoire.' | translate}}</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      taskForm.controls['name'].hasError('minlength') &&
+                      taskForm.controls['name'].touched
+                    "
+                    >{{'Le nom de ticket doit comporter au moins 5 caractères.' | translate}}</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      taskForm.controls['name'].hasError('maxlength') &&
+                      taskForm.controls['name'].touched
+                    "
+                    >{{'Le nom de ticket ne peut pas dépasser 60 caractères.' | translate}}</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <mat-select
+                    placeholder="{{'priorité' | translate}}"
+                    [formControl]="taskForm.controls['priority']"
+                  >
+                    <mat-option
+                      *ngFor="let priority of priorities"
+                      [value]="priority"
+                    >
+                      {{ priority }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <mat-label>Status</mat-label>
+                  <input
+                    matInput
+                    [formControl]="taskForm.controls['status']"
+                    [readonly]="true"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{'date de début' | translate}}</mat-label>
+                  <input
+                    matInput
+                    [formControl]="taskForm.controls['startDate']"
+                    [min]="minStartDate"
+                    [max]="maxStartDate"
+                    [matDatepicker]="startDate"
+                    (dateChange)="checkDate()"
+                    readonly
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="startDate">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #startDate> </mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{'date de fin' | translate}}</mat-label>
+                  <input
+                    matInput
+                    [formControl]="taskForm.controls['endDate']"
+                    [min]="minEndDate"
+                    [matDatepicker]="endDate"
+                    (dateChange)="checkDate()"
+                    readonly
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="endDate">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #endDate> </mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <mat-label>{{'durée estimée' | translate}}</mat-label>
+                  <input
+                    type="number"
+                    matInput
+                    placeholder="durée en heures"
+                    min="1"
+                    [formControl]="taskForm.controls['estimatedTime']"
+                    (keypress)="numberOnly($event)"
+                  />
+                  <span matSuffix class="text-secondary font-medium">{{'heures' | translate}}</span>
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <mat-label>{{'assigné à' | translate}}</mat-label>
+                  <mat-select
+                    matNativeControl
+                    [formControl]="taskForm.controls['userId']"
+                  >
+                  <mat-option *ngIf="usersList.length === 0" disabled
+                    > {{ noDataFound }} </mat-option
+                  >
+                  <mat-option *ngFor="let user of usersList" [value]="user.id">
+                    <div fxFlex="100" fxFlex.gt-md="12">
+                      <img alt="user" class="mat-card-avatar" [src]="user.image" />
+                    </div>
+                    <div fxFlex="100" fxFlex.gt-md="88" class="user-details">
+                      <span>{{ user.firstName }} {{ user.lastName }}</span>
+                    </div>
+                  </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <mat-select
+                    placeholder="{{'version cible' | translate}}"
+                    [formControl]="taskForm.controls['phaseId']"
+                    #choosedValue
+                    (selectionChange)="changePhase(choosedValue.value)">
+                    <mat-option *ngIf="phaseList.length === 0" disabled>{{'aucun résultat trouvé' | translate}}</mat-option>
+                    <mat-option
+                      *ngFor="let phase of phaseList"
+                      [value]="phase.id"
+                    >
+                      {{ phase.title }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex="100" fxFlex.gt-md="50">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <mat-label>{{'ticket Parente' | translate}}</mat-label>
+                  <mat-select
+                    matNativeControl
+                    [formControl]="taskForm.controls['parentId']"
+                  >
+                  <mat-option *ngIf="tasksList.length === 0" disabled>{{'aucun résultat trouvé' | translate}}</mat-option>
+                    <mat-option *ngFor="let task of tasksList" [value]="task.id"
+                      >{{ task.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="100">
+              <div class="m-r-15 m-l-15">
+                <mat-form-field>
+                  <textarea
+                    type="text"
+                    matInput
+                    [formControl]="taskForm.controls['comment']"
+                    placeholder="{{'commentaire' | translate}}"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div align="end" fxLayoutGap="10px">
+          <button
+            mat-button
+            (click)="submit()"
+            mat-flat-button
+            color="warn"
+            [disabled]="!taskForm.valid"
+          >
+            {{'ajouter' | translate}}
+          </button>
+          <button class="canceled" mat-button (click)="close()">{{'annuler' | translate}}</button>
+        </div>
+        </form>
+      </mat-dialog-content>
+    </mat-card-content>
+  </mat-card>

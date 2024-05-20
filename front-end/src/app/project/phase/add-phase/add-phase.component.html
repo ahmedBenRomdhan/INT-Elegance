@@ -1,0 +1,129 @@
+<a
+  mat-icon-button
+  class="close-button"
+  [mat-dialog-close]="true"
+  matTooltip="{{ 'matTooltipClose' | translate }}"
+>
+  <mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title>{{'Ajouter Phase' | translate}}</h2>
+<mat-dialog-content class="pb-3">
+  <form [formGroup]="phaseForm">
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              required
+              [formControl]="phaseForm.controls['title']"
+              placeholder="{{'titre' | translate}}"
+            />
+            <mat-error
+              *ngIf="
+                phaseForm.controls['title'].hasError('required') &&
+                phaseForm.controls['title'].touched
+              "
+              >{{'Le titre est obligatoire.' | translate}}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                phaseForm.controls['title'].hasError('minlength') &&
+                phaseForm.controls['title'].touched
+              "
+              >{{'Le titre doit comporter au moins 3 caractères.' | translate}}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <input
+              matInput
+              [formControl]="phaseForm.controls['status']"
+              [readonly]="true"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label>{{'date de début'}}</mat-label>
+            <input
+              readonly
+              matInput
+              [formControl]="phaseForm.controls['startDate']"
+              [min]="minStartDate"
+              [max]="maxStartDate"
+              [matDatepicker]="startDate"
+              (dateChange)="checkDate()"
+            />
+            <mat-datepicker-toggle matSuffix [for]="startDate">
+            </mat-datepicker-toggle>
+            <mat-datepicker #startDate> </mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label>{{'date de fin'}}</mat-label>
+            <input
+              readonly
+              matInput
+              [formControl]="phaseForm.controls['endDate']"
+              [min]="minEndDate"
+              [matDatepicker]="endDate"
+              (dateChange)="checkDate()"
+            />
+            <mat-datepicker-toggle matSuffix [for]="endDate">
+            </mat-datepicker-toggle>
+            <mat-datepicker #endDate> </mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="100">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <textarea
+              type="text"
+              matInput
+              [formControl]="phaseForm.controls['description']"
+              placeholder="Description"
+            ></textarea>
+            <mat-error
+              *ngIf="
+                phaseForm.controls['description'].hasError('maxlength') &&
+                phaseForm.controls['description'].touched
+              "
+              >{{'La description ne peut pas dépasser 120 caractères.' | translate}}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div align="end" fxLayoutGap="10px">
+      <button
+        mat-button
+        (click)="submit()"
+        mat-flat-button
+        color="warn"
+        [disabled]="!phaseForm.valid"
+      >
+        {{'Ajouter' | translate}}
+      </button>
+      <button class="canceled" mat-button (click)="closeDialog()">
+        {{'Annuler' | translate}}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

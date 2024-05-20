@@ -1,0 +1,70 @@
+<mat-card>
+  <mat-card-content>
+    <!-- column -->
+    <mat-card-title fxLayoutAlign="start center">
+      {{ title }}
+    </mat-card-title>
+    <mat-card-subtitle>{{ legend }}</mat-card-subtitle>
+    <table mat-table [dataSource]="dataSource" class="table" matSort>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nom</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="d-flex">
+            <img class="mat-card-avatar" [src]="element.user.image" />
+            <div class="m-l-15">
+              <p
+                class="font-medium m-b-0 m-t-0"
+                style="text-transform: capitalize"
+              >
+                {{ element.user.firstName }} {{ element.user.lastName }}
+              </p>
+              <small class="text-muted"
+                >{{ element.user.department }} -
+                {{ element.user.position }}</small
+              >
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="total projects">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Projets</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.projectCount }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="projets en cours">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Projets En Cours</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.inProgressCount }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element" class="action-link">
+          <a
+          mat-icon-button
+          class="text-info"
+          matTooltip="Consulter Profil"
+          (click)="openProfileDialog(element.user)"
+          ><mat-icon>remove_red_eye</mat-icon></a
+        >
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          {{noData}}
+        </td>
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      [pageSizeOptions]="[6, 12, 18, 24, 30, 36, 42, 48, 54, 60]"
+      showFirstLastButtons
+    ></mat-paginator>
+  </mat-card-content>
+</mat-card>

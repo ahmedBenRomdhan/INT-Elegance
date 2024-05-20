@@ -1,0 +1,6 @@
+FROM node:14.15.0
+WORKDIR /app/back-end/
+COPY . /app/back-end/
+RUN npm install --save-dev sequelize-cli
+WORKDIR /app/back-end/src
+CMD npx sequelize-cli db:migrate

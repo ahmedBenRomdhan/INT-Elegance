@@ -1,0 +1,18 @@
+<a
+  mat-icon-button
+  class="close-button"
+  [mat-dialog-close]="true"
+  matTooltip="{{ matTooltipClose }}"
+>
+  <mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title>{{ 'deleteRoleCard' | translate }}</h2>
+{{ 'deleteRoleMessage' | translate }} {{ local_data.name }} ?
+<div mat-dialog-actions align="end" class="buttons">
+  <button mat-button mat-flat-button (click)="deleteRole()" color="warn">
+    {{ 'deleteButton' | translate }}
+  </button>
+  <button mat-button class="canceled" (click)="closeDialog()" mat-flat-button>
+    {{ 'cancelButton' | translate }}
+  </button>
+</div>

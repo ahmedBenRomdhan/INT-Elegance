@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>{{'supprimer Ticket' | translate}}</h2>
+{{'Êtes-vous sûr de vouloir supprimer le ticket' | translate}} {{ local_data.name }} ?
+<div mat-dialog-actions align="end"  class="buttons">
+  <button mat-button mat-flat-button (click)="deleteTask()" color="warn">{{'supprimer' | translate}}</button>
+  <button mat-button class="canceled" (click)="closeDialog()" mat-flat-button>{{'annuler' | translate}}</button>
+</div>

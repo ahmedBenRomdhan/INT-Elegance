@@ -1,0 +1,58 @@
+<a
+  mat-icon-button
+  class="close-button"
+  [mat-dialog-close]="true"
+  matTooltip="{{ matTooltipClose }}"
+>
+  <mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title>{{ 'editRoleCard' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="roleForm">
+    <mat-form-field>
+      <input
+        type="text"
+        matInput
+        required
+        formControlName="name"
+        placeholder="{{'Nom' | translate}}"
+      />
+      <mat-error *ngIf="roleForm.controls['name'].hasError('required')">
+        {{ 'requiredRoleName' | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="text"
+        matInput
+        formControlName="description"
+        placeholder="Description"
+      />
+    </mat-form-field>
+    <mat-form-field >
+      <mat-label>{{ rolePermissionsLabel }}</mat-label>
+      <mat-select formControlName="permissions"  multiple>
+        <mat-optgroup *ngFor="let group of permissionsGroups" [label]="group.groupName">
+          <mat-option *ngFor="let permission of group.permissions" [value]="permission.id">
+            {{permission.name}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+
+    <div align="end" fxLayoutGap="10px">
+      <button
+        mat-button
+        (click)="Submit()"
+        mat-flat-button
+        color="warn"
+        [disabled]="!roleForm.valid"
+      >
+        {{ 'editButton' | translate }}
+      </button>
+      <button class="canceled" mat-button (click)="closeDialog()">
+        {{ 'cancelButton' | translate}}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

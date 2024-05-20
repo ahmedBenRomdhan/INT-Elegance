@@ -1,0 +1,14 @@
+<a
+  mat-icon-button
+  class="close-button"
+  [mat-dialog-close]="true"
+  matTooltip="{{ matTooltipClose }}"
+>
+  <mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title>{{deleteMeetingCard}}</h2>
+Êtes-vous sûr de vouloir supprimer {{ local_data.title }}?
+<div mat-dialog-actions align="end" class="buttons">
+  <button mat-button mat-flat-button (click)="deleteMeeting()" color="warn">{{deleteButton}}</button>
+  <button mat-button class="canceled" (click)="closeDialog()" mat-flat-button>{{cancelButton}}</button>
+</div>

@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-content>
+    <!-- column -->
+    <mat-card-title fxLayoutAlign="start center">
+      {{ 'status-list-projects-title' | translate}}
+    </mat-card-title>
+    <mat-card-subtitle>{{ 'status-list-projects-legend' | translate}}</mat-card-subtitle>
+    <ngx-charts-pie-chart
+    [view]="view"
+    [scheme]="colorScheme"
+    [results]="result"
+    [legend]="showLegend"
+    [legendTitle]="legendTitle"
+    [legendPosition]="legendPosition"
+    [labels]="showLabels"
+    [doughnut]="isDoughnut"
+  >
+  </ngx-charts-pie-chart>
+  </mat-card-content>
+</mat-card>

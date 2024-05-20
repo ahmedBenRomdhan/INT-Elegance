@@ -1,0 +1,553 @@
+<mat-card>
+  <mat-card-content class="edit-task">
+    <div fxLayout="row">
+      <div class="title">
+        <h2 mat-dialog-title>{{'modifier ticket' | translate}}</h2>
+      </div>
+      <div class="ml-auto">
+        <span class="bg-dark" [ngClass]="getStatusClass()">
+          {{ phaseTitle }}
+        </span>
+      </div>
+    </div>
+    <mat-dialog-content class="pb-3">
+      <form [formGroup]="taskForm">
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-select
+                  placeholder="Type"
+                  [formControl]="taskForm.controls['type']"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let tracker of trackers"
+                    [value]="tracker"
+                  >
+                    {{ tracker }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    taskForm.controls['type'].hasError('required') &&
+                    taskForm.controls['type'].touched
+                  "
+                  >{{'Le type est obligatoire.' | translate}}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <input
+                  type="text"
+                  matInput
+                  required
+                  [formControl]="taskForm.controls['name']"
+                  placeholder="{{'nom' | translate}}"
+                />
+                <mat-error
+                  *ngIf="
+                    taskForm.controls['name'].hasError('required') &&
+                    taskForm.controls['name'].touched
+                  "
+                  >{{'Le nom de ticket est obligatoire.' | translate}}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    taskForm.controls['name'].hasError('minlength') &&
+                    taskForm.controls['name'].touched
+                  "
+                  >{{'Le nom de ticket doit comporter au moins 5 caractères.' | translate}}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    taskForm.controls['name'].hasError('maxlength') &&
+                    taskForm.controls['name'].touched
+                  "
+                  >{{'Le nom de ticket ne peut pas dépasser 60 caractères.' | translate}}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-select
+                  placeholder="{{'priorité' | translate}}"
+                  [formControl]="taskForm.controls['priority']"
+                >
+                  <mat-option
+                    *ngFor="let priority of priorities"
+                    [value]="priority"
+                  >
+                    {{ priority | translate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-select
+                  placeholder="Status"
+                  [formControl]="taskForm.controls['status']"
+                  #statusValue
+                  (selectionChange)="changeStatus(statusValue.value)"
+                  required
+                >
+                  <mat-option *ngFor="let s of status" [value]="s">{{
+                    s
+                  }}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    taskForm.controls['status'].hasError('required') &&
+                    taskForm.controls['status'].touched
+                  "
+                  >{{'Le status est obligatoire.' | translate}}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'date de début' | translate}}</mat-label>
+                <input
+                  matInput
+                  (dateChange)="checkDate()"
+                  [max]="maxStartDate"
+                  [formControl]="taskForm.controls['startDate']"
+                  [matDatepicker]="startDate"
+                  readonly
+                />
+                <mat-datepicker-toggle matSuffix [for]="startDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #startDate> </mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'date de fin' | translate}}</mat-label>
+                <input
+                  matInput
+                  [formControl]="taskForm.controls['endDate']"
+                  [matDatepicker]="endDate"
+                  readonly
+                  [min]="minEndDate"
+                  (dateChange)="checkDate()"
+                />
+                <mat-datepicker-toggle matSuffix [for]="endDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #endDate> </mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-label>{{'durée estimée' | translate}}</mat-label>
+                <input
+                  type="number"
+                  matInput
+                  placeholder="{{'durée en heures' | translate}}"
+                  min="0"
+                  [formControl]="taskForm.controls['estimatedTime']"
+                  (keypress)="numberOnly($event)"
+                />
+                <span matSuffix class="text-secondary font-medium">{{'heures' | translate}}</span>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-label>{{'temps passé' | translate}}</mat-label>
+                <input
+                  type="number"
+                  matInput
+                  placeholder="{{'durée en heures' | translate}}"
+                  min="0"
+                  [formControl]="taskForm.controls['passedTime']"
+                  (keypress)="numberOnly($event)"
+                  [readonly]="
+                  taskForm.controls['status'].value === newStatus"
+                />
+                <span matSuffix class="text-secondary font-medium">{{'heures' | translate}}</span>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-select
+                  placeholder="{{'version cible' | translate}}"
+                  [formControl]="taskForm.controls['phaseId']"
+                  #choosedValue
+                  (selectionChange)="changePhase(choosedValue.value)"
+                >
+                  <mat-option *ngIf="phaseList.length === 0" disabled
+                    >{{'aucun résultat trouvé' | translate}}</mat-option
+                  >
+                  <mat-option
+                    *ngFor="let phase of phaseList"
+                    [value]="phase.id"
+                  >
+                    {{ phase.title }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-label>{{'ticket Parente' | translate}}</mat-label>
+                <mat-select
+                  matNativeControl
+                  [formControl]="taskForm.controls['parentId']"
+                >
+                  <mat-option *ngIf="tasksList.length === 0" disabled
+                    >{{'aucun résultat trouvé' | translate}}</mat-option
+                  >
+                  <mat-option *ngFor="let task of tasksList" [value]="task.id"
+                    >{{ task.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-label>{{'assigné à' | translate}}</mat-label>
+                <mat-select
+                  matNativeControl
+                  [formControl]="taskForm.controls['userId']"
+                >
+                <mat-option *ngIf="usersList.length === 0" disabled
+                > {{ noDataFound }} </mat-option
+              >
+              <mat-option *ngFor="let user of usersList" [value]="user.id">
+                <div fxFlex="100" fxFlex.gt-md="12">
+                  <img alt="user" class="mat-card-avatar" [src]="user.image" />
+                </div>
+                <div fxFlex="100" fxFlex.gt-md="88" class="user-details">
+                  <span>{{ user.firstName }} {{ user.lastName }}</span>
+                </div>
+              </mat-option>
+                </mat-select>
+            </mat-form-field>
+            </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-label>{{'réalisation' | translate}}</mat-label>
+                <input
+                  type="number"
+                  matInput
+                  placeholder="réalisation en pourcentage"
+                  min="0"
+                  max="100"
+                  [formControl]="taskForm.controls['realisation']"
+                  (keypress)="numberOnly($event)"
+                  [readonly]="
+                    taskForm.controls['status'].value === newStatus ||  taskForm.controls['status'].value === completedStatus ||
+                    isParentTask()
+                  "
+                />
+                <mat-error
+                  *ngIf="
+                    taskForm.controls['realisation'].touched &&
+                    taskForm.controls['realisation'].hasError('maxExceeded')
+                  "
+                >
+                  {{'La valeur dépasse le maximum(100%)' | translate}}
+                </mat-error>
+                <span matSuffix class="text-secondary font-medium">%</span>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <mat-label>URL</mat-label>
+                <input
+                  matInput
+                  [formControl]="taskForm.controls['url']"
+                  #urlInput
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="copyUrl(urlInput.value)"
+                >
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxFlex="100" fxFlex.gt-md="50">
+            <div class="m-r-15 m-l-15">
+              <mat-form-field>
+                <textarea
+                  type="text"
+                  matInput
+                  [formControl]="taskForm.controls['comment']"
+                  placeholder="{{'commentaire' | translate}}"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div align="end" fxLayoutGap="10px">
+          <button
+            mat-button
+            (click)="submit()"
+            mat-flat-button
+            color="warn"
+            [disabled]="!taskForm.valid"
+          >
+            {{'modifier' | translate}}
+          </button>
+          <button class="canceled" mat-button (click)="close()">{{'annuler' | translate}}</button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-content>
+    <div fxLayout="row">
+      <div class="title">
+        <h2 mat-dialog-title>{{'liste sous-tâches' | translate}}</h2>
+      </div>
+    </div>
+    <mat-dialog-content class="pb-3">
+      <div class="responsive-table">
+        <div fxLayout="row">
+          <div class="ml-auto" fxLayoutGap="15px">
+            <div fxFlex.gt-md="50">
+              <mat-form-field appearance="outline" class="search-button">
+                <input
+                  class="input-button"
+                  matInput
+                  placeholder="{{'Rechercher Ticket' | translate}}"
+                  (keyup)="applyFilter($event.target.value)"
+                />
+                <mat-icon class="icon-size" matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+            <span>
+              <button
+                matTooltip="Cacher/Afficher des colonnes"
+                mat-raised-button
+                color="accent"
+                #menuTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="mainMenuButton"
+              >
+                <mat-icon>view_list</mat-icon>{{'colonnes' | translate}}
+              </button>
+            </span>
+          </div>
+          <mat-menu #mainMenuButton="matMenu">
+            <span
+              (click)="$event.stopPropagation()"
+              *ngFor="let column of columnShowHideList; index as i"
+            >
+              <mat-slide-toggle
+                class="mat-menu"
+                [(ngModel)]="column.isActive"
+                (change)="toggleColumn(column)"
+              >
+              </mat-slide-toggle>
+              <span class="mat-menuList">
+                {{ column.name }}
+              </span>
+              <br />
+            </span>
+          </mat-menu>
+        </div>
+        <table
+        mat-table
+        [dataSource]="dataSource"
+      >
+        <ng-container matColumnDef="ID">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-chip-list>
+              <mat-chip [ngClass]="getTypeClass(element.type)" selected>
+                #{{ element.id }}
+              </mat-chip>
+            </mat-chip-list>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-chip-list>
+              <mat-chip [ngClass]="getTypeClass(element.type)" selected>
+                {{ element.type }}
+              </mat-chip>
+            </mat-chip-list>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Nom">
+          <th mat-header-cell *matHeaderCellDef>{{'nom' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.name }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.status }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Priorité">
+          <th mat-header-cell *matHeaderCellDef>{{'priorité' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.priority }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Date Début">
+          <th mat-header-cell *matHeaderCellDef>{{'date de début' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.startDate | date }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Date Fin">
+          <th mat-header-cell *matHeaderCellDef>{{'date de fin'}}</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.endDate | date }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Temps Estimé">
+          <th mat-header-cell *matHeaderCellDef>{{'temps estimé' | translate}}</th>
+          <td mat-cell *matCellDef="let element">{{ element.estimatedTime }} H</td>
+        </ng-container>
+        <ng-container matColumnDef="Temps Passé">
+          <th mat-header-cell *matHeaderCellDef>{{'temps passé' | translate}}</th>
+          <td mat-cell *matCellDef="let element">{{ element.passedTime }} H</td>
+        </ng-container>
+        <ng-container matColumnDef="Réalisation">
+          <th mat-header-cell *matHeaderCellDef>{{'réalisation' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            <span
+              ><mat-progress-bar
+                color="accent"
+                mode="determinate"
+                [value]="element.realisation"
+              ></mat-progress-bar>
+              {{ element.realisation }} %</span
+            >
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Assigné à">
+          <th mat-header-cell *matHeaderCellDef>{{'assigné à' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="d-flex" *ngIf="element.user">
+              <img
+                class="mat-card-avatar"
+                [src]="element.user.image"
+                matTooltip=" {{ element.user.firstName }} {{
+                  element.user.lastName
+                }}"
+              />
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Actions">
+          <th mat-header-cell *matHeaderCellDef><span>Actions</span></th>
+          <td mat-cell *matCellDef="let element">
+            <div fxLayoutGap="0px">
+              <a
+                mat-icon-button
+                matTooltip="Lien ticket"
+                (click)="getUrl(element.url)"
+                [disabled]="!element.url"
+                ><mat-icon>link</mat-icon></a
+              >
+              <a
+                mat-icon-button
+                matTooltip="{{'modifier ticket' | translate}}"
+                [href]="['/project/task/edit/' + element.id]"
+                [disabled]="element.status === canceledStatus"
+                *ngIf="hasPermission(editTasksPermission)"
+                ><mat-icon>edit</mat-icon></a
+              >
+              <a
+                matTooltip="{{'ajouter un ticket enfant' | translate}}"
+                mat-icon-button
+                color="accent"
+                [href]="['/project/task/add-child/'+ element.id]"
+                [disabled]="element.status === canceledStatus"
+                *ngIf="hasPermission(addChildTasksPermission)"
+                ><mat-icon>add_circle</mat-icon>
+              </a>
+              <a
+                matTooltip="{{'Consulter historique' | translate}}"
+                mat-icon-button
+                [routerLink]="['/project/task/trail', element.id]"
+                *ngIf="hasPermission(trailTasksPermission)"
+                ><mat-icon>history</mat-icon>
+              </a>
+              <a
+                mat-icon-button
+                matTooltip="{{'supprimer ticket' | transalte}}"
+                color="warn"
+                (click)="openDeleteDialog(element)"
+                *ngIf="element.status === newStatus && hasPermission(deleteTasksPermission)"
+                ><mat-icon>delete_outline</mat-icon>
+              </a>
+              <a
+              mat-icon-button
+              matTooltip="{{'annuler ticket' | translate}}"
+              color="warn"
+              (click)="openCancelDialog(element)"
+              *ngIf="element.status !== newStatus && element.status !== completedStatus && element.status !== canceledStatus && hasPermission(deleteTasksPermission)"
+              ><mat-icon>cancel</mat-icon>
+            </a>
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            {{noDataFound}}
+          </td>
+        </tr>
+        <tr
+          mat-row
+          *matRowDef="let element; columns: displayedColumns"
+          [ngClass]="{ 'gray-background': element.status === canceledStatus }"
+        ></tr>
+      </table>
+        <mat-paginator
+          [pageSizeOptions]="[8, 16, 24, 32, 40, 48, 56, 64, 72, 80]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </div>
+    </mat-dialog-content>
+    </mat-card-content>
+</mat-card>

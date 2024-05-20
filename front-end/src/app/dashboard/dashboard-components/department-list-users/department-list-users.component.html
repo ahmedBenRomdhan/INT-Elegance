@@ -1,0 +1,19 @@
+<mat-card class="card">
+  <mat-card-content>
+    <!-- column -->
+    <mat-card-title fxLayoutAlign="start center" class="legend">
+      {{ legend }}
+    </mat-card-title>
+    <ngx-charts-pie-chart class="chart-dep" 
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="result"
+      [legend]="showLegend"
+      [legendTitle]="legendTitle"
+      [legendPosition]="legendPosition"
+      [labels]="showLabels"
+      [doughnut]="isDoughnut"
+    >
+    </ngx-charts-pie-chart>
+  </mat-card-content>
+</mat-card>

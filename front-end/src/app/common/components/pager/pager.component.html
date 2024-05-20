@@ -1,0 +1,27 @@
+<ul class="pager" style="height: 34px">
+  <li [class.disabled]="!canPrevious()">
+    <a href="javascript:void(0)" (click)="selectPage(1)">
+      <i class="{{pagerPreviousIcon}}"></i>
+    </a>
+  </li>
+  <li [class.disabled]="!canPrevious()">
+    <a href="javascript:void(0)" (click)="prevPage()">
+      <i class="{{pagerLeftArrowIcon}}"></i>
+    </a>
+  </li>
+  <li class="pages" *ngFor="let pg of pages" [class.active]="pg.number === currentP">
+    <a href="javascript:void(0)" (click)="selectPage(pg.number)">
+      {{pg.text}}
+    </a>
+  </li>
+  <li [class.disabled]="!canNext()">
+    <a href="javascript:void(0)" (click)="nextPage()">
+      <i class="{{pagerRightArrowIcon}}"></i>
+    </a>
+  </li>
+  <li [class.disabled]="!canNext()">
+    <a href="javascript:void(0)" (click)="selectPage(totalPages)">
+      <i class="{{pagerNextIcon}}"></i>
+    </a>
+  </li>
+</ul>

@@ -1,0 +1,11 @@
+the constructor is  a built in function every class has which will be executed
+once you create a new instance of this class.	
+
+
+
+La problématique que vous avez identifiée et la solution proposée pour la résoudre.
+Les besoins fonctionnels et non fonctionnels de votre projet.
+Les technologies que vous utiliserez pour développer votre projet, 
+ainsi que l'architecture logique et physique de votre solution.
+Les diagrammes.
+Une conclusion qui synthétise les points clés de votre projet.

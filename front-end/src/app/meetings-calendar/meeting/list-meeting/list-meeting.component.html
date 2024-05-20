@@ -1,0 +1,122 @@
+<div fxLayout="row wrap">
+  <div fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title class="title"> {{ 'meetingsCard' | translate }} </mat-card-title>
+        <div class="table-responsive">
+          <div fxLayout="row">
+            <div class="meetings-buttons" fxLayoutGap="15px">
+              <button mat-raised-button (click)="openAddDialog()" color="primary"
+                *ngIf="hasPermission(addMeetingsPermission)">
+                <mat-icon>add</mat-icon>
+                {{ 'addButton' | translate }}
+              </button>
+              <button mat-raised-button color="primary" [routerLink]="['/calendar/details']"
+                *ngIf="hasPermission(showCalendarsPermission)">
+                <mat-icon>event</mat-icon>
+                {{ 'showCalendarButton' | translate }}
+              </button>
+            </div>
+            <div class="ml-auto">
+              <mat-form-field appearance="outline" class="search-button">
+                <input class="input-size" matInput placeholder="{{ 'searchMeetingPlaceholder' | translate }}"
+                  (keyup)="applyFilter($event.target.value)" #searchInput />
+                <mat-icon class="icon-size" matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <table mat-table [dataSource]="dataSource" class="table employee-list no-wrap">
+            <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ 'createdByColumn' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <div class="avatar">
+                  <img src="{{ element.creator.image }}" matTooltip="{{ element.creator.firstName }} {{
+                    element.creator.lastName
+                  }} " (click)="openProfileDialog(element.creator)" />
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ 'titleColumn' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="p-20 font-normal">
+                {{ element.title }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="room">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ 'roomColumn' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="p-20 font-normal">
+                {{ element.room.name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ dateColumn }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="p-20 font-normal">
+                {{ element.start | date : "mediumDate" }} <span *ngIf="element.end > element.start">- {{element.end |
+                  date : "mediumDate" }}</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="startTime">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ 'startTimeColumn' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element" class="p-20 font-normal">
+                {{ element.startTime | customTimePipe }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="endTime">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ 'endTimeColumn' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="p-20 font-normal">
+                {{ element.endTime | customTimePipe }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="participants">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ participantsColumn }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <div class="avatar-group" *ngIf="element.users">
+                  <div class="avatar" *ngFor="let user of element.users">
+                    <img src="{{ user.image }}" matTooltip="{{ user.firstName }} {{ user.lastName }} "
+                      (click)="openProfileDialog(user)" />
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef class="font-medium font-14 p-20">
+                {{ actionColumn }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="action-link">
+                <a mat-icon-button (click)="openEditDialog(element)" [disabled]="check(element)"
+                  *ngIf="hasPermission(editMeetingsPermission, element)"><mat-icon>edit</mat-icon></a>
+                <a mat-icon-button color="warn" (click)="openDeleteDialog(element)" [disabled]="check(element)"
+                  *ngIf="hasPermission(deleteMeetingsPermission, element)"><mat-icon>delete_outline</mat-icon></a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+                {{ noDataFound }}
+              </td>
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

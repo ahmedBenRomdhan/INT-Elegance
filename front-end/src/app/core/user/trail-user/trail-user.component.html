@@ -1,0 +1,134 @@
+<mat-card>
+  <mat-card-content>
+    <div fxFlex.gt-md="97">
+      <mat-card-title>{{'historyCard' | translate}}</mat-card-title>
+      <mat-card-subtitle>
+        {{'Dernières modifications sur les utilisateurs' | translate}}
+      </mat-card-subtitle>
+    </div>
+    <a mat-icon-button>
+      <mat-icon
+        matTooltip="Revenir en arrière"
+        color="accent"
+        [routerLink]="['/user/list']"
+        >undo</mat-icon
+      >
+    </a>
+  </mat-card-content>
+  <div class="no-data" *ngIf="trailUsersList.length === 0">
+    {{ noData }}
+    <br />
+    <br />
+  </div>
+  <div class="comment-widgets" *ngFor="let trail of obs | async">
+    <!-- Comment Row -->
+    <div class="d-flex flex-row comment-row" *ngIf="trail.eventType === 'POST'">
+      <div class="p-2">
+        <span class="round">
+          <img src="{{ trail.user.image }}" alt="user" width="50" />
+        </span>
+      </div>
+      <div class="comment-text w-100 p-t-0">
+        <h6 class="m-0">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+        </h6>
+        <p class="m-b-5 m-t-5 text-muted trail-text">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+          <span class="success"> {{"a ajouté l'utilisateur" | translate}} {{ trail.entityName }}</span>
+        </p>
+        <div class="comment-footer">
+          <span class="text-muted pull-right trail-text">{{
+            trail.createdAt |  date : " MMMM d, y, h:mm a"
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row comment-row" *ngIf="trail.eventType === 'PUT'">
+      <div class="p-2">
+        <span class="round">
+          <img src="{{ trail.user.image }}" alt="user" width="50" />
+        </span>
+      </div>
+      <div class="comment-text w-100 p-t-0">
+        <h6 class="m-0">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+        </h6>
+        <ng-container>
+          <p
+            class="m-b-5 m-t-5 text-muted trail-text"
+            *ngFor="let att of trail.attributes; let i = index"
+          >
+          <span *ngIf=" trail.attributes[i] !== 'image'">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+          <span class="success">
+            {{"a modifié pour l'utilisateur" | translate}} <strong>{{trail.entityName}}</strong> {{ trail.attributes[i] }} {{'de' | translate}} {{ trail.oldValues[i] }}
+          </span>
+          {{'à' | translate}} <span class="danger">{{ trail.newValues[i] }}</span>
+        </span>
+        <span *ngIf=" trail.attributes[i] === 'image'">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+          <span class="success">
+            {{"a modifié pour l'utilisateur" | translate}} <strong>{{trail.entityName}}</strong> {{"l'image" | translate}}
+          </span>
+        </span>
+        </p>
+        </ng-container>
+        <div class="comment-footer">
+          <span class="text-muted pull-right trail-text">{{
+            trail.createdAt |  date : " MMMM d, y, h:mm a"
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-flex flex-row comment-row"
+      *ngIf="trail.eventType === 'DELETE'"
+    >
+      <div class="p-2">
+        <span class="round">
+          <img src="{{ trail.user.image }}" alt="user" width="50" />
+        </span>
+      </div>
+      <div class="comment-text w-100 p-t-0">
+        <h6 class="m-0">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+        </h6>
+        <ng-container>
+          <p class="m-b-5 m-t-5 text-muted trail-text">
+            {{ trail.user.firstName }} {{ trail.user.lastName }}
+            <span class="danger"> {{'a désactivé le compte utilisateur' | translate}} {{ trail.entityName }}</span>
+          </p>
+        </ng-container>
+        <div class="comment-footer">
+          <span class="text-muted pull-right trail-text">{{
+            trail.createdAt |  date : " MMMM d, y, h:mm a"
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row comment-row" *ngIf="trail.eventType === 'GET'">
+      <div class="p-2">
+        <span class="round">
+          <img src="{{ trail.user.image }}" alt="user" width="50" />
+        </span>
+      </div>
+      <div class="comment-text w-100 p-t-0">
+        <h6 class="m-0">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+        </h6>
+        <p class="m-b-5 m-t-5 text-muted trail-text">
+          {{ trail.user.firstName }} {{ trail.user.lastName }}
+          <span class="success"> {{'a réactivé le compte utilisateur' | translate}} {{ trail.entityName }}</span>
+        </p>
+        <div class="comment-footer">
+          <span class="text-muted pull-right trail-text">
+            {{ trail.createdAt |  date : " MMMM d, y, h:mm a"}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-paginator
+    [pageSizeOptions]="[10, 25, 50, 100, 250, 500, 1000]"
+  ></mat-paginator>
+</mat-card>

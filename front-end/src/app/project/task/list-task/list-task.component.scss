@@ -1,0 +1,63 @@
+.mat-progress-bar{
+    width: 90%
+}
+.ml-auto{
+    margin-right: 15px;
+}
+.mat-menu{
+    margin-left: 5px;
+    width: 40px;
+}
+.mat-menuList{
+    margin-right: 5px;
+}
+
+.mat-card-avatar{
+    //margin-left: 15px;
+    width: 33px;
+    height: 33px;
+}
+
+.search-button{
+    font-size: 8px
+}
+.icon-size {
+    font-size: 20px;
+    color: #8d949b;
+}
+
+.filtres{
+    margin-top: 14px;
+  }
+
+  tr.example-detail-row {
+    height: 0;
+  }
+
+  tr.example-element-row:not(.example-expanded-row):hover {
+    background: whitesmoke;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+  
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+  .gray-background {
+    background-color: rgba(120, 130, 140, 0.13);
+  }
+
+  .reset-button{
+    margin-top: 20px;
+    .mat-icon{
+      font-size: 18px;    
+    }
+  }

@@ -1,0 +1,279 @@
+<div fxLayout="row" fxLayoutAlign="center start">
+  <div fxFlex.gt-md="100" fxFlex.gt-sm="100" fxFlex="100">
+    <mat-card class="mat-card-top chat-app mat-card">
+      <mat-sidenav-container
+        [ngClass]="{
+          'side-panel-opened': sidePanelOpened,
+          'side-panel-closed': !sidePanelOpened
+        }"
+      >
+
+        <mat-sidenav
+          #chatnav
+          [mode]="isOver() ? 'over' : 'side'"
+          [opened]="!isOver()"
+          (open)="sidePanelOpened = true"
+          (close)="sidePanelOpened = false"
+        >
+          <mat-toolbar color="primary" class="no-shadow">
+            <div fxLayout="row" fxFlex="100">
+              <span class="m-t-0 font-14">
+                <img
+                  src="{{ userPhoto }}"
+                  class="img-circle vm m-r-10"
+                  width="40"
+                />{{ userFirstName }} {{ userLastName }}</span
+              >
+            </div>
+          </mat-toolbar>
+
+          <div
+            fxLayout="column"
+            fxLayoutAlign="space-between"
+            class="navbar-buttons"
+          >
+            <button (click)="selectedTab = 'chat'" class="chat-button" fxFlex>
+              Chat
+            </button>
+            <button
+              (click)="selectedTab = 'project'"
+              class="project-button"
+              fxFlex
+            >
+              Project
+            </button>
+          </div>
+          <div class="message-title" *ngIf="selectedTab === 'chat'">
+            <div class="search-area">
+              <div class="input-field">
+                <input
+                  placeholder="Search"
+                  type="text"
+                  [(ngModel)]="searchTerms"
+                  [ngbTypeahead]="search"
+                />
+                <!-- [ngbTypeahead]="search" -->
+                <i class="fa fa-search"></i>
+              </div>
+            </div>
+          </div>
+
+          <mat-nav-list
+            *ngIf="
+              checkUserAvailabe() &&
+              !loading &&
+              searchTerms.length == 0 &&
+              selectedTab == 'chat'
+            "
+          >
+            <mat-list-item
+              *ngFor="let message of oneToOneConversations"
+              (click)="onSelect(message); scrollToBottom()"
+
+              (mouseenter)="setFocusConversation(message.id, true)"
+              (mouseleave)="setFocusConversation(message.id, false)"
+            >
+              <img mat-list-avatar src="{{ message.users[0]?.image }}" alt="" />
+              <div
+                class="status-circle"
+                *ngIf="
+                  this.connectedUsersIds.includes(message.users[0]?.id)
+                    ? true
+                    : false
+                "
+              ></div>
+              <h3 matLine>{{ message.users[0]?.firstName }}</h3>
+              <p
+                matLine
+                class="text-muted"
+                [style.font-weight]="isViewed(message) ? 'normal' : 'bold'">
+
+                {{
+                  truncateMessageContent(
+                    getMessageContent(message),
+                    isCurrentUser(message)
+                  )
+                }}
+              </p>
+            </mat-list-item>
+          </mat-nav-list>
+
+          <mat-nav-list
+            *ngIf="selectedTab == 'project' && projectConversations.length > 0"
+          >
+            <mat-list-item
+              *ngFor="let message of projectConversations"
+              (click)="onSelect(message)"
+              [ngClass]="{ 'selected-message': message === selectedMessage }"
+            >
+              <img mat-list-avatar src="assets/images/20945101.png" alt="1" />
+              <h3 matLine>{{ message.conversation_name }}</h3>
+              <p matLine class="text-muted">
+                {{
+                  truncateMessageContent(
+                    getMessageContent(message),
+                    isCurrentUser(message)
+                  )
+                }}
+              </p>
+            </mat-list-item>
+          </mat-nav-list>
+          <mat-nav-list *ngIf="searchTerms.length > 0">
+            <mat-list-item
+              *ngFor="let user of filteredResponse"
+              (click)="openConver(user.id)"
+            >
+              <div class="user-display">
+                <h4>{{ user.firstName }}</h4>
+                <!-- Display other user details as needed -->
+              </div>
+              <img mat-list-avatar src="{{ user.image }}" alt="" />
+            </mat-list-item>
+            <mat-list-item *ngIf="searchedUsers && searchedUsers.length === 0">
+              <div class="user-display">
+                <h4>No conversations available</h4>
+              </div>
+            </mat-list-item>
+          </mat-nav-list>
+        </mat-sidenav>
+        <mat-toolbar
+          class="bg-success no-shadow chat-right-panel"
+          color="warn"
+          *ngIf="selectedMessage"
+        >
+          <ng-container>
+            <button (click)="chatnav.toggle()" class="mr-1" mat-icon-button>
+              <mat-icon>short_text</mat-icon>
+            </button>
+            <span class="top-avatar m-r-10">
+              <img
+              [src]="getImageSrc()"
+                class="img-circle"
+              />
+            </span>
+            <div fxFlex>
+              <div class="font-14">
+                {{
+                  selectedMessage.conversation_name == null
+                    ? selectedMessage.users[0]?.firstName
+                    : selectedMessage.conversation_name
+                }}
+              </div>
+            </div>
+          </ng-container>
+          <span class="example-spacer"></span>
+          <button [matMenuTriggerFor]="them" mat-icon-button class="ml-1">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #them="matMenu" x-position="before">
+            <button
+              mat-menu-item
+              (click)="openProfileDialog(selectedMessage.users[0])"
+            >
+              contact info
+            </button>
+            <button mat-menu-item>Delete chat</button>
+          </mat-menu>
+        </mat-toolbar>
+        <mat-card-content
+          class="chat-middle-box scrollable-content"
+          #scrollableContent
+        >
+          <div *ngFor="let c of selectedMessage.messages">
+            <ng-container *ngIf="checkId(c.senderId) !== 'odd'; else evenblock">
+              <div class="chat-list odd">
+                <div class="chat-message">
+                  <div class="chat-block">
+                    <span>
+                      <img
+                        src="{{ getUserImage(c.senderId) }}"
+                        class="img-circle"
+                        width="40"
+                      />
+                    </span>
+                    <div class="message-content">
+                      <div [innerHTML]="createMessageContent(c)"></div>
+                    </div>
+                  </div>
+                  <span class="chat-date">{{
+                    c.createdAt | date : "short"
+                  }}</span>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #evenblock>
+              <div class="chat-list even">
+                <div class="chat-message">
+                  <div class="chat-block bg-light-info message-body">
+                    <div class="message-content">
+                      <div [innerHTML]="createMessageContent(c)"></div>
+                    </div>
+                  </div>
+                  <span class="chat-date">{{
+                    c.createdAt | date : "short"
+                  }}</span>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+          <div *ngIf="selectedMessage" class="chat-list odd">
+            <div class="chat-message">
+              <div class="user-typing">
+                <span *ngIf="typingUsers.has(selectedMessage.id)">
+                  {{ selectedMessage.users[0]?.firstName }} is typing...
+                </span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions class="chat-footer">
+          <div fxLayout="row" layout-align="start center">
+            <mat-form-field class="mr-1 ml-1" fxFlex>
+              <input
+                matInput
+                [(ngModel)]="msg"
+                placeholder="Send message"
+                #myInput
+                (keyup.enter)="OnAddMsg()"
+                (keydown)="onTyping()"
+                (blur)="onNotTyping()"
+              />
+              <mat-hint align="end" *ngIf="typingUsers.has(selectedMessage.id)">
+                Typing...
+              </mat-hint>
+            </mat-form-field>
+            <button
+              mat-fab
+              color="warn"
+              class="right"
+              (click)="OnAddMsg()"
+              [disabled]="!msg && !selectedFiles"
+            >
+              <mat-icon>send</mat-icon>
+            </button>
+            <input
+              type="file"
+              class="file-input"
+              (change)="onFileSelected($event)"
+              #fileUpload
+            />
+
+            <div class="file-upload">
+              {{ fileName }}
+
+              <button
+                mat-mini-fab
+                color="primary"
+                class="upload-btn"
+                (click)="fileUpload.click()"
+              >
+                <mat-icon>attach_file</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-sidenav-container>
+    </mat-card>
+  </div>
+</div>

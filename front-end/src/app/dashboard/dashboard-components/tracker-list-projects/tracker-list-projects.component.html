@@ -1,0 +1,27 @@
+<mat-card >
+    <mat-card-content>
+        <!-- column -->
+        <mat-card-title fxLayoutAlign="start center">
+        {{title}}
+        </mat-card-title>
+        <mat-card-subtitle>{{legend}}</mat-card-subtitle>
+        <div id="chart"  class="d-flex flex-column" >
+          <ngx-charts-bar-horizontal-stacked
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="projects"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [legendTitle]="legendTitle"
+            [legendPosition]="position"
+            >
+          </ngx-charts-bar-horizontal-stacked>
+        </div>
+    </mat-card-content>
+</mat-card>

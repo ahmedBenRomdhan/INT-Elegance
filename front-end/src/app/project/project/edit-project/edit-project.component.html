@@ -1,0 +1,195 @@
+<a
+  mat-icon-button
+  class="close-button"
+  [mat-dialog-close]="true"
+  matTooltip="{{ matTooltipClose }}"
+>
+  <mat-icon>close</mat-icon>
+</a>
+<h2 mat-dialog-title>{{'Modifier Projet' | translate}}</h2>
+<mat-dialog-content class="pb-3">
+  <form [formGroup]="projectForm">
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              required
+              [formControl]="projectForm.controls['name']"
+              placeholder="{{'nom' | translate}}"
+            />
+            <mat-error
+              *ngIf="
+                projectForm.controls['name'].hasError('required') &&
+                projectForm.controls['name'].touched
+              "
+              >{{'requiredRoleName' | translate}}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                projectForm.controls['name'].hasError('minlength') &&
+                projectForm.controls['name'].touched
+              "
+              >{{'Le nom doit comporter au moins 3 caractères..' | translate}}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <mat-select
+              placeholder="Status"
+              [formControl]="projectForm.controls['status']"
+              required
+            >
+              <mat-option *ngFor="let s of status" [value]="s">{{
+                s
+              }}</mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                projectForm.controls['status'].hasError('required') &&
+                projectForm.controls['status'].touched
+              "
+              >{{'Le status est obligatoire.' | translate}}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <mat-select
+              placeholder="Type"
+              [formControl]="projectForm.controls['type']"
+              required
+            >
+              <mat-option *ngFor="let type of types" [value]="type">{{
+                type
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-error
+            *ngIf="
+              projectForm.controls['type'].hasError('required') &&
+              projectForm.controls['type'].touched
+            "
+            >{{'Le type est obligatoire.' | translate}}</mat-error
+          >
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <mat-label>{{'Collaborateurs' | translate}}</mat-label>
+            <mat-select
+              matNativeControl
+              [formControl]="projectForm.controls['users']"
+              [multiple]="true"
+            >
+              <mat-option *ngIf="usersList.length === 0" [disabled]="true">
+                {{ noDataFound }}
+              </mat-option>
+              <mat-option *ngFor="let user of usersList" [value]="user.id">
+                <div fxFlex="100" fxFlex.gt-md="12">
+                  <img alt="user" class="mat-card-avatar" [src]="user.image" />
+                </div>
+                <div fxFlex="100" fxFlex.gt-md="88" class="user-details">
+                  <span>{{ user.firstName }} {{ user.lastName }}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label>{{'date de début' | translate}}</mat-label>
+            <input
+              matInput
+              [max]="maxStartDate"
+              [formControl]="projectForm.controls['startDate']"
+              [matDatepicker]="startDate"
+              (dateChange)="checkDate()"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="startDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #startDate></mat-datepicker>
+            <mat-error
+              *ngIf="
+                projectForm.controls['startDate'].hasError('required') &&
+                projectForm.controls['startDate'].touched
+              "
+            >
+              {{'La date début est obligatoire.' | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex="100" fxFlex.gt-md="50">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field appearance="outline">
+            <mat-label>{{'date de fin' | translate}}</mat-label>
+            <input
+              matInput
+              [formControl]="projectForm.controls['endDate']"
+              [matDatepicker]="endDate"
+              [min]="minEndDate"
+              (dateChange)="checkDate()"
+              readonly
+            />
+            <mat-datepicker-toggle matSuffix [for]="endDate">
+            </mat-datepicker-toggle>
+            <mat-datepicker #endDate> </mat-datepicker>
+            <mat-error
+              *ngIf="
+                projectForm.controls['endDate'].hasError('required') &&
+                projectForm.controls['endDate'].touched
+              "
+              >{{'La date fin est obligatoire.' | translate}}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" class="align-items-center">
+      <div fxFlex="100" fxFlex.gt-md="100">
+        <div class="m-r-15 m-l-15">
+          <mat-form-field>
+            <textarea
+              type="text"
+              matInput
+              [formControl]="projectForm.controls['description']"
+              placeholder="Description"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div align="end" fxLayoutGap="10px">
+      <button
+        mat-button
+        (click)="submit()"
+        mat-flat-button
+        color="warn"
+        [disabled]="!projectForm.valid"
+      >
+        {{'Modifier' | translate}}
+      </button>
+      <button class="canceled" mat-button (click)="closeDialog()">
+        {{'Annuler' | translate}}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

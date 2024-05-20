@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-card-content>
+    <!-- column -->
+    <mat-card-title fxLayoutAlign="start center"></mat-card-title>
+    <mat-form-field class="ml-auto">
+      <mat-select
+        placeholder="{{ label }}"
+        [formControl]="selectedValue"
+        #choosedValue
+        (selectionChange)="changePhase(choosedValue.value)"
+      >
+        <mat-option *ngIf="phasesList.length === 0" disabled>{{
+          noResult
+        }}</mat-option>
+        <mat-option *ngFor="let phase of phasesList" [value]="phase.id">
+          {{ phase.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div id="chart" class="d-flex flex-column">
+      <ngx-charts-bar-vertical-2d
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="list"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [legendTitle]="legendTitle"
+        [legendPosition]="position"
+      >
+      </ngx-charts-bar-vertical-2d>
+    </div>
+  </mat-card-content>
+</mat-card>

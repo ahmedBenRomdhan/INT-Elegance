@@ -1,0 +1,14 @@
+  <mat-card-content>
+    <mat-card-title>{{ 'Taches' | translate }}</mat-card-title>
+    <mat-card-subtitle>{{ 'legends' | translate }}</mat-card-subtitle>
+    <div class="chart" >
+        <ngx-charts-advanced-pie-chart
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="tasks"
+        [gradient]="gradient"
+        [animations]="animation"
+      >
+      </ngx-charts-advanced-pie-chart>
+      </div>
+  </mat-card-content>
