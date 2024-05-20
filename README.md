@@ -22,15 +22,15 @@ it's a project management application that i developed during my internship in S
 
 ## How to run this application locally
 
-1 - Clone the repo
-2 - Make a database table called "int-elegance"
-3 - cd backend then npm install
-4 - open backend/src in the cmd then npx sequelize-cli db:migrate 
-5 - cd frontend then npm i 
-6 - run the backend (npm run start) and run the frontend (ng serve)
-7 - once you run the backend an admin account will be created automatically by the application
-8 - the credentials for the admin account can be found in yopmail.com (navigate to yopmail.com and search sofiatech2023@yopmail.com)
-9 - if you want to receive the credentials in your personal email address change the email address in the app.js file (line 295)
+- Clone the repo
+- Make a database table called "int-elegance"
+- cd backend then npm install
+- open backend/src in the cmd then npx sequelize-cli db:migrate 
+- cd frontend then npm i 
+- run the backend (npm run start) and run the frontend (ng serve)
+- once you run the backend an admin account will be created automatically by the application
+- the credentials for the admin account can be found in yopmail.com (navigate to yopmail.com and search sofiatech2023@yopmail.com)
+- if you want to receive the credentials in your personal email address change the email address in the app.js file (line 295)
 
 ## How to run this application using docker containers
 
